@@ -37,8 +37,7 @@ export class AuthService {
 
     async login(req: AuthLoginDto, res: Response): Promise<any> {
         try {
-            const user = await User.findOne({
-                where: {
+            const user = await User.findOne({where: {
                     email: req.email,
                     pwdHash: hashPwd(req.pwd),
                 }
