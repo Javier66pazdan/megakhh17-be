@@ -24,6 +24,6 @@ export class UserService {
             }
         }
         await user.save();
-        return this.filter(user);
+        return user;
     }
 }
