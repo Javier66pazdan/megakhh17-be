@@ -15,7 +15,7 @@ export class UserService {
     async register(newUser: RegisterDto): Promise<RegisterUserResponse> {
         const user = new User();
         user.email = newUser.email;
-        user.pwdHash = hashPwd(newUser.pwd);
+        user.pwdHash = await hashPwd(newUser.pwd);
 
         if (await User.findOne({where: {email: user.email}})) {
             return {

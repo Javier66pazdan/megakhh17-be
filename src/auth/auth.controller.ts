@@ -15,7 +15,7 @@ export class AuthController {
     async userRegister(
         @Body() req: AuthLoginDto,
         @Res() res: Response,
-    ): Promise<any> {
+    ): Promise<AuthLoginDto> {
         return this.authService.login(req, res);
     }
 

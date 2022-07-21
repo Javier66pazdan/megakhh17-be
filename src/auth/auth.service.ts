@@ -1,11 +1,11 @@
 import {Injectable} from '@nestjs/common';
 import {Response} from 'express';
+import {User} from "../user/user.entity";
 import {sign} from 'jsonwebtoken';
 import {v4 as uuid} from 'uuid';
-import {hashPwd} from '../utils/hash-pwd';
 import {AuthLoginDto} from "./dto/auth-login.dto";
-import {User} from "../user/user.entity";
 import {JwtPayload} from "./jwt.strategy";
+import { comparePwd } from "../utils/compare-pwd";
 
 @Injectable()
 export class AuthService {
@@ -13,7 +13,7 @@ export class AuthService {
     private createToken(currentTokenId: string): { accessToken: string, expiresIn: number } {
         const payload: JwtPayload = {id: currentTokenId};
         const expiresIn = 60 * 60 * 24;
-        const accessToken = sign(payload, 'gft%&*(*HOHFTYGIU:J@OPK~opjoihiut67R$%&^()}14546454LI&^ytfytFYTD$%68779upoijIJO:pjOIHIUYGTD^%$ED><?><', {expiresIn});
+        const accessToken = sign(payload, process.env.JWT_SECRET, {expiresIn});
 
         return {
             accessToken,
@@ -36,32 +36,42 @@ export class AuthService {
     }
 
     async login(req: AuthLoginDto, res: Response): Promise<any> {
+        const { email, pwd} = req;
         try {
             const user = await User.findOne({where: {
-                    email: req.email,
-                    pwdHash: hashPwd(req.pwd),
+                    email
                 }
             });
 
             if (!user) {
-                return res.json({error: 'Invalid login data!'});
+                return res.json({error: 'Użytkownik z podanym emailem nie istnieje.'});
             }
 
-            const token = this.createToken(await this.generateToken(user));
+            console.log(user);
+            const validPassword = await comparePwd(pwd, user.pwdHash);
 
-            return res
-                .cookie('jwt', token.accessToken, {
-                    secure: false,
-                    domain: 'localhost',
-                    httpOnly: true,
-                })
-                .json({ok: true});
+            if(validPassword) {
+                const token = this.createToken(await this.generateToken(user));
+
+                return res
+                  .cookie('jwt', token.accessToken, {
+                      secure: false,
+                      domain: 'localhost',
+                      httpOnly: true,
+                  })
+                  .json({ok: true});
+            } else {
+                return res
+                  .status(400)
+                  .json({error: 'Podano niepoprawny email lub hasło.'});
+            }
         } catch (e) {
             return res.json({error: e.message})
         }
     };
 
     async logout(user: User, res: Response) {
+        console.log(user);
         try {
             user.currentTokenId = null;
             await user.save();
