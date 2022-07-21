@@ -14,9 +14,26 @@ export class User extends BaseEntity {
     pwdHash: string;
 
     @Column({
-        nullable: true,
         default: null,
+        nullable: true,
         select: false,
     })
-    currentTokenId: string | null;
+    currentTokenId: string;
+
+    @Column({
+        length: 50,
+        nullable: false,
+        select: false,
+    })
+    registerToken: string;
+
+    @Column({
+        default: null,
+    })
+    role_id: string;
+
+    @Column({
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    createdAt: Date;
 }
