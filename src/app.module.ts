@@ -9,6 +9,7 @@ import { StudentsModule } from './students/students.module';
 import { HrsModule } from './hrs/hrs.module';
 import { RoleModule } from './role/role.module';
 import { StudentsProfileModule } from './students_profile/students_profile.module';
+import { StudentsHrsModule } from './students_hrs/students_hrs.module';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { StudentsProfileModule } from './students_profile/students_profile.modul
       logging: true,
       synchronize: true,
     }),
-    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule
+    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule
   ],
   controllers: [AppController],
   providers: [AppService],
