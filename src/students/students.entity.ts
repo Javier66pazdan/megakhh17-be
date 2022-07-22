@@ -6,12 +6,6 @@ export class Students extends BaseEntity {
     id: string;
 
     @Column({
-        length: 36,
-        default: null,
-    })
-    user_id: string;
-
-    @Column({
         default: 0,
     })
     courseCompletion: number;
@@ -33,11 +27,6 @@ export class Students extends BaseEntity {
     })
     teamProjectDegree: number;
     //Sugerowana nazwa: 'teamProjectGrade'
-
-    @Column({
-        default: null,
-    })
-    students_profile_id: string;
 
     @Column({
         default: 0,

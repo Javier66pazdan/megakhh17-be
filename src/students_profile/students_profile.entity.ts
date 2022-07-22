@@ -1,5 +1,6 @@
-import {BaseEntity, Column, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
 
+@Entity()
 export class StudentsProfile extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
@@ -41,12 +42,13 @@ export class StudentsProfile extends BaseEntity {
         default: null,
     })
     targetWorkCity: string;
-//    Suggested name: workTargetCity
+//    Sugerowana nazwa: workTargetCity
 
     @Column({
         default: 0,
     })
     expectedSalary: number;
+    //W dokumentacji jest literówka: exprctedSalary
 
     @Column({
         default: 0,

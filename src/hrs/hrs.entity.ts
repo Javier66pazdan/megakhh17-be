@@ -6,11 +6,6 @@ export class Hrs extends BaseEntity {
     id: string;
 
     @Column({
-        default: null,
-    })
-    user_id: string;
-
-    @Column({
         length: 255,
     })
     fullName: string;

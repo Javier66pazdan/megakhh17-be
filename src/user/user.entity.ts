@@ -28,11 +28,6 @@ export class User extends BaseEntity {
     registerToken: string;
 
     @Column({
-        default: null,
-    })
-    role_id: string;
-
-    @Column({
         default: () => 'CURRENT_TIMESTAMP',
     })
     createdAt: Date;
