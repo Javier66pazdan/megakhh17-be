@@ -21,7 +21,6 @@ export class Hrs extends BaseEntity {
     company: string;
 
     @Column({
-        length: 3,
         default: 0,
     })
     maxReservedStudents: number;

@@ -13,27 +13,23 @@ export class Students extends BaseEntity {
 
     @Column({
         default: 0,
-        length: 1,
     })
     courseCompletion: number;
     //Sugerowana nazwa: 'courseFinalGrade'
 
     @Column({
         default: 0,
-        length: 1,
     })
     courseEngagement: number;
 
     @Column({
         default: 0,
-        length: 1,
     })
     projectDegree: number;
     //Sugerowana nazwa: 'projectGrade'
 
     @Column({
         default: 0,
-        length: 1,
     })
     teamProjectDegree: number;
     //Sugerowana nazwa: 'teamProjectGrade'
@@ -45,7 +41,6 @@ export class Students extends BaseEntity {
 
     @Column({
         default: 0,
-        length: 1,
     })
     status: number;
 

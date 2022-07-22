@@ -8,6 +8,7 @@ import { ConfigModule } from "@nestjs/config";
 import { StudentsModule } from './students/students.module';
 import { HrsModule } from './hrs/hrs.module';
 import { RoleModule } from './role/role.module';
+import { StudentsProfileModule } from './students_profile/students_profile.module';
 
 @Module({
   imports: [
@@ -19,12 +20,12 @@ import { RoleModule } from './role/role.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: ["/dist/**/**.entity{.ts,.js}"],
+      entities: ["./dist/**/*.entity{.ts,.js}"],
       bigNumberStrings: false,
       logging: true,
       synchronize: true,
     }),
-    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule
+    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule
   ],
   controllers: [AppController],
   providers: [AppService],

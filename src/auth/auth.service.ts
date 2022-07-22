@@ -13,7 +13,7 @@ export class AuthService {
     private createToken(currentTokenId: string): { accessToken: string, expiresIn: number } {
         const payload: JwtPayload = {id: currentTokenId};
         const expiresIn = 60 * 60 * 24;
-        const accessToken = sign(payload, 'gft%&*(*HOHFTYGIU:J@OPK~opjoihiut67R$%&^()}14546454LI&^ytfytFYTD$%68779upoijIJO:pjOIHIUYGTD^%$ED><?><', {expiresIn});
+        const accessToken = sign(payload, process.env.JWT_SECRET, {expiresIn});
 
         return {
             accessToken,
