@@ -1,8 +1,7 @@
-import * as crypto from 'crypto';
+import * as bcrypt from "bcrypt";
 
-export const hashPwd = (p: string): string => {
-    const hmac = crypto.createHmac('sha512', 'gfh7483oY^%&%$^$&(*OIlkjmkjnbBGcr"!$%&*()OI@:L~P{JUHYFYTFjIU&TGYHuhyur6543*&)(*_)(_(&YH');
-    hmac.update(p);
+export const hashPwd = async (p: string): Promise<string> => {
+    const salt = await bcrypt.genSalt(10);
 
-    return hmac.digest('hex');
+    return await bcrypt.hash(p, salt);
 }

@@ -10,7 +10,7 @@ export class User extends BaseEntity {
     })
     email: string;
 
-    @Column({select: false})
+    @Column()
     pwdHash: string;
 
     @Column({

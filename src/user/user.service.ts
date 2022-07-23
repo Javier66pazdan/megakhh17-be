@@ -15,12 +15,12 @@ export class UserService {
     async register(newUser: RegisterDto): Promise<RegisterUserResponse> {
         const user = new User();
         user.email = newUser.email;
-        user.pwdHash = hashPwd(newUser.pwd);
+        user.pwdHash = await hashPwd(newUser.pwd);
 
         if (await User.findOne({where: {email: user.email}})) {
             return {
                 isSuccessful: false,
-                message: `Sorry, user with email: '${user.email}' already exist! Please provide a different email.`
+                message: `Użytkownik z e-mailem: '${user.email}' już istnieje. Zaloguj się na konto lub stwórz konto używając inny adres e-mail.`
             }
         }
         await user.save();
