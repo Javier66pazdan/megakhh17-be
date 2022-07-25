@@ -1,4 +1,6 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {StudentsHrs} from "../students_hrs/students_hrs.entity";
+import {Students} from "../students/students.entity";
 
 @Entity()
 export class StudentsProfile extends BaseEntity {
@@ -79,4 +81,8 @@ export class StudentsProfile extends BaseEntity {
         default: () => 'CURRENT_TIMESTAMP',
     })
     createdAt: Date;
+
+    @ManyToOne(type => Students, entity => entity.studentsProfile)
+    @JoinColumn()
+    students: Students;
 }
