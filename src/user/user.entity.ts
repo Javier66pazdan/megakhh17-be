@@ -1,5 +1,6 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Hrs} from "../hrs/hrs.entity";
+import {Students} from "../students/students.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -10,6 +11,11 @@ export class User extends BaseEntity {
         length: 255,
     })
     email: string;
+
+    @Column({
+        length: 60,
+    })
+    password: string;
 
     @Column({select: false})
     pwdHash: string;
@@ -36,4 +42,8 @@ export class User extends BaseEntity {
     @ManyToOne(type => Hrs, entity => entity.user)
     @JoinColumn()
     hrs: Hrs;
+
+    @ManyToOne(type => Students, entity => entity.user)
+    @JoinColumn()
+    students: Students;
 }

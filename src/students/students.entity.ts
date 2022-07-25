@@ -1,4 +1,5 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {User} from "../user/user.entity";
 
 @Entity()
 export class Students extends BaseEntity {
@@ -37,4 +38,7 @@ export class Students extends BaseEntity {
         default: () => 'CURRENT_TIMESTAMP',
     })
     createdAt: Date;
+
+    @OneToMany(type => User, entity => entity.students)
+    user: User[];
 }
