@@ -1,4 +1,7 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Hrs} from "../hrs/hrs.entity";
+import {Students} from "../students/students.entity";
+import {Role} from "../role/role.entity";
 
 @Entity()
 export class User extends BaseEntity {
@@ -10,13 +13,36 @@ export class User extends BaseEntity {
     })
     email: string;
 
-    @Column()
+    @Column() // password
     pwdHash: string;
 
     @Column({
-        nullable: true,
         default: null,
+        nullable: true,
         select: false,
     })
-    currentTokenId: string | null;
+    currentTokenId: string;
+
+    @Column({
+        length: 50,
+        nullable: false,
+        select: false,
+    })
+    registerToken: string;
+
+    @Column({
+        default: () => 'CURRENT_TIMESTAMP',
+    })
+    createdAt: Date;
+
+    @ManyToOne(type => Hrs, entity => entity.user)
+    @JoinColumn()
+    hrs: Hrs;
+
+    @ManyToOne(type => Students, entity => entity.user)
+    @JoinColumn()
+    students: Students;
+
+    @OneToMany(type => Role, entity => entity.user)
+    role: Role[];
 }
