@@ -12,6 +12,7 @@ import { StudentsProfileModule } from './students_profile/students_profile.modul
 import { StudentsHrsModule } from './students_hrs/students_hrs.module';
 import { ExpectedTypeWorkModule } from './expected_type_work/expected_type_work.module';
 import { StudentsUrlsModule } from './students_urls/students_urls.module';
+import { ExpectedContractTypeModule } from './expected_contract_type/expected_contract_type.module';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { StudentsUrlsModule } from './students_urls/students_urls.module';
       logging: true,
       synchronize: true,
     }),
-    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule, ExpectedTypeWorkModule, StudentsUrlsModule
+    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule, ExpectedTypeWorkModule, StudentsUrlsModule, ExpectedContractTypeModule
   ],
   controllers: [AppController],
   providers: [AppService],
