@@ -1,4 +1,5 @@
-import {BaseEntity, Column, Entity, PrimaryGeneratedColumn} from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Students } from "../students/students.entity";
 
 @Entity()
 export class ExpectedContactType extends BaseEntity {
@@ -14,4 +15,7 @@ export class ExpectedContactType extends BaseEntity {
         default: () => 'CURRENT_TIMESTAMP',
     })
     createdAt: Date;
+
+    @ManyToOne(type => Students, entity => entity.expectedContactType)
+    students: Students;
 }
