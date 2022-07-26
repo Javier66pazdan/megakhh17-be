@@ -15,3 +15,4 @@ export class StudentsHrs extends BaseEntity {
     @JoinColumn()
     students: Students;
 }
+

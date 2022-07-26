@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import {User} from "../user/user.entity";
 import {StudentsHrs} from "../students_hrs/students_hrs.entity";
 import {StudentsProfile} from "../students_profile/students_profile.entity";
@@ -35,6 +35,11 @@ export class Students extends BaseEntity {
 
     @Column()
     bonusProjectUrls: string;
+
+    @Column({
+        default: 0,
+    })
+    status: number;
 
     @Column({
         default: () => 'CURRENT_TIMESTAMP',
