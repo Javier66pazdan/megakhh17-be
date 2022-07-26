@@ -1,5 +1,4 @@
 import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
-import {StudentsHrs} from "../students_hrs/students_hrs.entity";
 import {Students} from "../students/students.entity";
 
 @Entity()
