@@ -33,10 +33,8 @@ export class Students extends BaseEntity {
     teamProjectDegree: number;
     //Sugerowana nazwa: 'teamProjectGrade'
 
-    @Column({
-        default: 0,
-    })
-    status: number;
+    @Column()
+    bonusProjectUrls: string;
 
     @Column({
         default: () => 'CURRENT_TIMESTAMP',
