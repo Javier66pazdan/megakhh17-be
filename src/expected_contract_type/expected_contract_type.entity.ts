@@ -2,20 +2,20 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "t
 import { Students } from "../students/students.entity";
 
 @Entity()
-export class ExpectedContactType extends BaseEntity {
+export class ExpectedContractType extends BaseEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
     @Column({
         length: 25
     })
-    typeContact: string;
+    typeContract: string;
 
     @Column({
         default: () => 'CURRENT_TIMESTAMP',
     })
     createdAt: Date;
 
-    @ManyToOne(type => Students, entity => entity.expectedContactType)
+    @ManyToOne(type => Students, entity => entity.expectedContractType)
     students: Students;
 }

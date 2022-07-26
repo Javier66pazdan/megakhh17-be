@@ -12,7 +12,7 @@ import { StudentsProfileModule } from './students_profile/students_profile.modul
 import { StudentsHrsModule } from './students_hrs/students_hrs.module';
 import { StudentsUrlsModule } from './students_urls/students_urls.module';
 import { ExpectedTypeWorkModule } from './expected_type_work/expected_type_work.module';
-import { ExpectedContactTypeModule } from './expected_contact_type/expected_contact_type.module';
+import { ExpectedContractTypeModule } from './expected_contract_type/expected_contract_type.module';
 
 @Module({
   imports: [
@@ -29,7 +29,7 @@ import { ExpectedContactTypeModule } from './expected_contact_type/expected_cont
       logging: true,
       synchronize: true,
     }),
-    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule, StudentsUrlsModule, ExpectedTypeWorkModule, ExpectedContactTypeModule
+    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule, StudentsUrlsModule, ExpectedTypeWorkModule, ExpectedContractTypeModule
   ],
   controllers: [AppController],
   providers: [AppService],
