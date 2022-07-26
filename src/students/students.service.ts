@@ -11,6 +11,6 @@ export class StudentsService {
     }
 
     async getOneStudent(id: string): Promise<Student> {
-        return await Students.findOne({where: {id}, relations: ['studentsHrs']})
+        return await Students.findOne({where: {id}, relations: ['studentsProfile']})
     }
 }

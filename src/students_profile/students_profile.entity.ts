@@ -40,6 +40,16 @@ export class StudentsProfile extends BaseEntity {
 
     @Column({
         length: 255,
+    })
+    portfolioUrls: string;
+
+    @Column({
+        length: 255,
+    })
+    projectUrls: string;
+
+    @Column({
+        length: 255,
         default: null,
     })
     targetWorkCity: string;
