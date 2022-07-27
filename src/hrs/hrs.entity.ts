@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import {User} from "../user/user.entity";
 
 @Entity()
@@ -26,6 +26,9 @@ export class Hrs extends BaseEntity {
     })
     createdAt: Date;
 
-    @OneToMany(type => User, entity => entity.hrs)
-    user: User[];
+    // @OneToMany(type => User, entity => entity.hrs)
+    // user: User[];
+    @OneToOne(type => User, entity => entity.hrs)
+    @JoinColumn()
+    user: User;
 }

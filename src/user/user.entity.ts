@@ -4,9 +4,9 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+  OneToMany, OneToOne,
+  PrimaryGeneratedColumn
+} from "typeorm";
 import { Hrs } from '../hrs/hrs.entity';
 import { Students } from '../students/students.entity';
 import { Role } from '../role/role.entity';
@@ -31,26 +31,35 @@ export class User extends BaseEntity {
   })
   currentTokenId: string;
 
-  @Column({
-    length: 50,
-    nullable: false,
-    select: false,
-  })
-  registerToken: string;
+  // @Column({
+  //   length: 50,
+  //   nullable: false,
+  //   select: false,
+  // })
+  // registerToken: string;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',
   })
   createdAt: Date;
 
-  @ManyToOne((type) => Hrs, (entity) => entity.user)
-  @JoinColumn()
+  // @ManyToOne((type) => Hrs, (entity) => entity.user)
+  // @JoinColumn()
+  // hrs: Hrs;
+
+  @OneToOne((type) => Hrs, (entity) => entity.user)
   hrs: Hrs;
 
-  @ManyToOne((type) => Students, (entity) => entity.user)
-  @JoinColumn()
+  // @ManyToOne((type) => Students, (entity) => entity.user)
+  // @JoinColumn()
+  // students: Students;
+
+  @OneToOne((type) => Students, (entity) => entity.user)
   students: Students;
 
-  @OneToMany((type) => Role, (entity) => entity.user)
-  role: Role[];
+  // @OneToMany((type) => Role, (entity) => entity.user)
+  // role: Role[];
+  @OneToOne((type) => Role, (entity) => entity.user)
+  @JoinColumn()
+  role: Role;
 }
