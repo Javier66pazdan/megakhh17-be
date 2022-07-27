@@ -12,9 +12,10 @@ export class StudentsService {
     ) {
     }
 
-    async getAllStudents(): Promise<AllStudentsResponse> {
+    async getAllAvailableStudents(): Promise<AllStudentsResponse> {
         return await this.datasource
             .createQueryBuilder(Students, 'students')
+            .where('students.status = :studentsStatus', {studentsStatus: 1})
             .select(['students.courseCompletion', 'students.courseEngagement', 'students.projectDegree', 'students.teamProjectDegree', 'studentsProfile.firstName', 'studentsProfile.lastName', 'studentsProfile.targetWorkCity', 'studentsProfile.expectedSalary', 'studentsProfile.canTakeApprenticeship', 'studentsProfile.monthsOfCommercialExp', 'studentsProfile.workExperience'])
             .leftJoin('students.studentsProfile', 'studentsProfile')
             .execute()

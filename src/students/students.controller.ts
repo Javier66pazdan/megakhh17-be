@@ -11,8 +11,8 @@ export class StudentsController {
     }
 
     @Get('/')
-    allStudents(): Promise<AllStudentsResponse> {
-        return this.studentsService.getAllStudents();
+    allAvailableStudents(): Promise<AllStudentsResponse> {
+        return this.studentsService.getAllAvailableStudents();
     }
 
     @Get('/:id')
