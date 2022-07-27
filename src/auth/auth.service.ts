@@ -54,7 +54,6 @@ export class AuthService {
         });
       }
 
-      console.log(user);
       const validPassword = await comparePwd(pwd, user.pwdHash);
 
       if (validPassword) {
@@ -78,7 +77,6 @@ export class AuthService {
   }
 
   async logout(user: User, res: Response) {
-    console.log(user);
     try {
       user.currentTokenId = null;
       await user.save();
@@ -91,5 +89,9 @@ export class AuthService {
     } catch (e) {
       return res.json({ error: e.message });
     }
+  }
+
+  getHello(): string {
+    return 'U see it only if u are logged and got role';
   }
 }
