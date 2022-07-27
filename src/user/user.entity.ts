@@ -31,12 +31,12 @@ export class User extends BaseEntity {
   })
   currentTokenId: string;
 
-  // @Column({
-  //   length: 50,
-  //   nullable: false,
-  //   select: false,
-  // })
-  // registerToken: string;
+  @Column({
+    length: 50,
+    nullable: false,
+    select: false,
+  })
+  registerToken: string;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',
@@ -59,7 +59,7 @@ export class User extends BaseEntity {
 
   // @OneToMany((type) => Role, (entity) => entity.user)
   // role: Role[];
-  @OneToOne((type) => Role, (entity) => entity.user)
-  @JoinColumn()
+  @ManyToOne((type) => Role, (entity) => entity.user)
+  // @JoinColumn()
   role: Role;
 }
