@@ -70,10 +70,9 @@ export class AuthService {
         const result = await this.dataSource
             .createQueryBuilder(User, 'user')
             .where('user.email = :userEmail', {userEmail: email})
-            .select(['studentsProfile.email', "studentsProfile.firstName", "studentsProfile.lastName"])
-            .select(['user.id', 'user.email', 'user.roleId'])
             .leftJoin('user.students', 'students')
             .leftJoin('students.studentsProfile', 'studentsProfile')
+            .select(['user.id', 'user.roleId', 'studentsProfile.firstName', 'studentsProfile.lastName', 'studentsProfile.githubUsername'])
             .execute()
 
         return res
@@ -103,7 +102,7 @@ export class AuthService {
         domain: 'localhost',
         httpOnly: true,
       });
-      return res.json({ ok: true });
+      return res.json({ success: true });
     } catch (e) {
       return res.json({ error: e.message });
     }
