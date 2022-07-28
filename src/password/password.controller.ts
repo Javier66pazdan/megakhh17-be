@@ -8,7 +8,10 @@ export class PasswordController {
   constructor(private readonly passwordService: PasswordService) {}
 
   @Post('/recovery')
-  async passwordRecovery(@Body() req: PasswordRecovery): Promise<string> {
-    return this.passwordService.passwordRecovery(req);
+  async passwordRecovery(
+    @Body() req: PasswordRecovery,
+    @Res() res: Response,
+  ): Promise<string> {
+    return this.passwordService.passwordRecovery(req, res);
   }
 }
