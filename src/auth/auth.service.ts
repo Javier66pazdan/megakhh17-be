@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import { Response } from 'express';
 import { User } from '../user/user.entity';
 import { sign } from 'jsonwebtoken';
@@ -6,9 +6,17 @@ import { v4 as uuid } from 'uuid';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { JwtPayload } from './jwt.strategy';
 import { comparePwd } from '../utils/compare-pwd';
+import {DataSource} from "typeorm";
+import {Students} from "../students/students.entity";
 
 @Injectable()
 export class AuthService {
+
+  constructor(
+      @Inject(DataSource) private dataSource: DataSource,
+  ) {
+  }
+
   private createToken(currentTokenId: string): {
     accessToken: string;
     expiresIn: number;
@@ -54,11 +62,19 @@ export class AuthService {
         });
       }
 
-      console.log(user);
       const validPassword = await comparePwd(pwd, user.pwdHash);
 
       if (validPassword) {
         const token = this.createToken(await this.generateToken(user));
+
+        const result = await this.dataSource
+            .createQueryBuilder(User, 'user')
+            .where('user.email = :userEmail', {userEmail: email})
+            .select(['studentsProfile.email', "studentsProfile.firstName", "studentsProfile.lastName"])
+            .select(['user.id', 'user.email', 'user.roleId'])
+            .leftJoin('user.students', 'students')
+            .leftJoin('students.studentsProfile', 'studentsProfile')
+            .execute()
 
         return res
           .cookie('jwt', token.accessToken, {
@@ -66,7 +82,7 @@ export class AuthService {
             domain: 'localhost',
             httpOnly: true,
           })
-          .json({ ok: true });
+          .json({ result });
       } else {
         return res
           .status(400)

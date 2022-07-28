@@ -3,7 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
+  ManyToOne, OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Students } from '../students/students.entity';
@@ -98,7 +98,7 @@ export class StudentsProfile extends BaseEntity {
   })
   createdAt: Date;
 
-  @ManyToOne((type) => Students, (entity) => entity.studentsProfile)
+  @OneToOne((type) => Students, (entity) => entity.studentsProfile)
   @JoinColumn()
   students: Students;
 }
