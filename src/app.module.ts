@@ -13,6 +13,7 @@ import { StudentsHrsModule } from './students_hrs/students_hrs.module';
 import { StudentsUrlsModule } from './students_urls/students_urls.module';
 import { ExpectedTypeWorkModule } from './expected_type_work/expected_type_work.module';
 import { ExpectedContractTypeModule } from './expected_contract_type/expected_contract_type.module';
+import { PasswordModule } from './password/password.module';
 
 @Module({
   imports: [
@@ -29,7 +30,7 @@ import { ExpectedContractTypeModule } from './expected_contract_type/expected_co
       logging: true,
       synchronize: true,
     }),
-    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule, StudentsUrlsModule, ExpectedTypeWorkModule, ExpectedContractTypeModule
+    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule, StudentsUrlsModule, ExpectedTypeWorkModule, ExpectedContractTypeModule, PasswordModule
   ],
   controllers: [AppController],
   providers: [AppService],
