@@ -1,6 +1,7 @@
 import {Controller, Get, Inject, Param} from '@nestjs/common';
 import {StudentsService} from "./students.service";
 import {AllStudentsResponse, Student} from "../interfaces/students";
+import {Students} from "./students.entity";
 
 @Controller('students')
 export class StudentsController {
@@ -18,7 +19,7 @@ export class StudentsController {
     @Get('/:id')
     oneStudent(
         @Param('id') id: string
-    ): Promise<Student> {
+    ): Promise<Students> {
         return this.studentsService.getOneStudent(id);
     }
 }

@@ -20,10 +20,15 @@ export class HrsService {
         const hrToGet = await Hrs.findOne({where: {id}, relations: ['user']});
         if (!hrToGet) {
             return {
-                isSuccessful: false,
-                message: `Hr with ID: '${id}' doesn't exist!`
+                success: false,
+                message: `Podane ID: '${id}' nie istnieje!`
             }
         }
         return hrToGet;
+    }
+
+    async getOneHr(id: string): Promise<Hrs> {
+        return await Hrs.findOne({where: {id}});
+
     }
 }

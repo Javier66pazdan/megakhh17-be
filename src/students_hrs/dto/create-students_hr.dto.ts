@@ -1,1 +1,4 @@
-export class CreateStudentsHrDto {}
+export class CreateStudentsHrDto {
+    hrId: string;
+    studentId: string;
+}

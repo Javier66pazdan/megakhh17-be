@@ -10,7 +10,7 @@ export class StudentsService {
         return await Students.find();
     }
 
-    async getOneStudent(id: string): Promise<Student> {
+    async getOneStudent(id: string): Promise<Students> {
         return await Students.findOne({where: {id}, relations: ['studentsProfile']})
     }
 }
