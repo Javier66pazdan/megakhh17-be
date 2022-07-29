@@ -12,21 +12,32 @@ export class StudentsService {
     ) {
     }
 
-    async getAllAvailableStudents(currentPage: number = 1, status: number = 3): Promise<PaginatedAllStudentsResponse> {
-        const itemsPerPage = 2;
-        const [students, count] = await Students.findAndCount({
-            where: {status},
-            relations: ['studentsProfile'],
-            skip: itemsPerPage * (currentPage - 1),
-            take: itemsPerPage,
-        });
+    async getAllAvailableStudents(currentPage: number = 1): Promise<PaginatedAllStudentsResponse> {
 
-        const totalPages = Math.ceil(count / itemsPerPage);
+        const itemsPerPage = 2;
+
+        const totalItems = await this.datasource
+            .createQueryBuilder(Students, 'students')
+            .where('students.status = :studentsStatus', {studentsStatus: 3})
+            .getCount()
+
+        const allStudents = await this.datasource
+            .createQueryBuilder(Students, 'students')
+            .select(['students.courseCompletion', 'students.courseEngagement', 'students.projectDegree', 'students.teamProjectDegree', 'studentsProfile.firstName', 'studentsProfile.lastName', 'studentsProfile.targetWorkCity', 'studentsProfile.expectedSalary', 'studentsProfile.canTakeApprenticeship', 'studentsProfile.monthsOfCommercialExp', 'studentsProfile.workExperience'])
+            .where('students.status = :studentsStatus', {studentsStatus: 3})
+            .leftJoin('students.studentsProfile', 'studentsProfile')
+            .offset(itemsPerPage * (currentPage - 1))
+            .limit(itemsPerPage)
+            .execute()
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
 
         return {
-            students,
+            allStudents,
+            totalItems,
             totalPages,
             itemsPerPage,
+            currentPage,
         }
     }
 

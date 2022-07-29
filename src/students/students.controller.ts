@@ -11,17 +11,17 @@ export class StudentsController {
     ) {
     }
 
-    @Get('/:pageNo')
-    allAvailableStudents(
-        @Param('pageNo') pageNo: number,
-    ): Promise<PaginatedAllStudentsResponse> {
-        return this.studentsService.getAllAvailableStudents(pageNo);
-    }
-
     @Get('/:id')
     oneStudent(
         @Param('id') id: string
     ): Promise<Student> {
         return this.studentsService.getOneStudent(id);
+    }
+
+    @Get('/all/:pageNo')
+    allAvailableStudents(
+        @Param('pageNo') pageNo: number,
+    ): Promise<PaginatedAllStudentsResponse> {
+        return this.studentsService.getAllAvailableStudents(pageNo);
     }
 }

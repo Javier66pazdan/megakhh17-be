@@ -8,7 +8,9 @@ export interface Student {
 export type AllStudentsResponse = Student[];
 
 export interface PaginatedAllStudentsResponse {
-  students: Student[];
+  allStudents: Student[];
+  totalItems: number;
   totalPages: number;
   itemsPerPage: number;
+  currentPage: number;
 }
