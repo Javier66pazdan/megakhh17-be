@@ -2,25 +2,25 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { StudentsHrsService } from './students_hrs.service';
 import { CreateStudentsHrDto } from './dto/create-students_hr.dto';
 import { UpdateStudentsHrDto } from './dto/update-students_hr.dto';
-import {StudentsHrsResponse} from "../interfaces/students_hrs";
+import {PaginatedHrAndStudentsResponse, StudentsHrsResponse} from "../interfaces/students_hrs";
+import {HrsService} from "../hrs/hrs.service";
 
 @Controller('students-hrs')
 export class StudentsHrsController {
-  constructor(private readonly studentsHrsService: StudentsHrsService) {}
+  constructor(
+      private readonly studentsHrsService: StudentsHrsService,
+      private readonly hrsService: HrsService,
+  ) {}
 
   @Post()
-  create(@Body() createStudentsHrDto: CreateStudentsHrDto): Promise<StudentsHrsResponse> {
+  create(
+      @Body() createStudentsHrDto: CreateStudentsHrDto): Promise<StudentsHrsResponse> {
     return this.studentsHrsService.create(createStudentsHrDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.studentsHrsService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.studentsHrsService.findOne(+id);
+    return this.studentsHrsService.findOne(id);
   }
 
   @Patch(':id')

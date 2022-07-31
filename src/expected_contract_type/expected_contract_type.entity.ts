@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { Students } from "../students/students.entity";
 
 @Entity()
@@ -16,6 +16,7 @@ export class ExpectedContractType extends BaseEntity {
     })
     createdAt: Date;
 
-    @ManyToOne(type => Students, entity => entity.expectedContractType)
+    @OneToMany(type => Students, entity => entity.expectedContractType)
+    @JoinColumn()
     students: Students;
 }

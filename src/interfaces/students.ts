@@ -9,3 +9,4 @@ export interface Student {
 }
 
 export type AllStudentsResponse = Student[];
+

@@ -4,6 +4,7 @@ import {GetHrsResponse} from "../interfaces/hrs";
 
 import {RegisterHrsDto} from "./dto/registerHrs.dto";
 import {Hrs} from "./hrs.entity";
+import {PaginatedHrAndStudentsResponse} from "../interfaces/students_hrs";
 
 @Controller('hrs')
 export class HrsController {
@@ -27,10 +28,11 @@ export class HrsController {
         return this.hrsService.getOneHr(id)
     }
 
-    @Get('/users/:hrId')
-    hrAndUsers(
-        @Param('hrId') hrId: string
-    ): Promise<GetHrsResponse> {
-        return this.hrsService.getHrAndUsers(hrId)
+    @Get('/students/:id/:pageNo')
+    hrAndStudents(
+        @Param('id') id: string,
+        @Param('pageNo') pageNo: number,
+    ): Promise<PaginatedHrAndStudentsResponse> {
+        return this.hrsService.getHrAndStudents(id, pageNo)
     }
 }

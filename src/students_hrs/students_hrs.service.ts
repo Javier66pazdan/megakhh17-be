@@ -1,10 +1,13 @@
 import {Inject, Injectable} from '@nestjs/common';
 import {CreateStudentsHrDto} from './dto/create-students_hr.dto';
 import {UpdateStudentsHrDto} from './dto/update-students_hr.dto';
-import {StudentsHrsResponse} from "../interfaces/students_hrs";
+import {PaginatedHrAndStudentsResponse, StudentsHrsResponse} from "../interfaces/students_hrs";
 import {StudentsHrs} from "./students_hrs.entity";
 import {StudentsService} from "../students/students.service";
 import {HrsService} from "../hrs/hrs.service";
+import {Student} from "../interfaces/students";
+import {DataSource} from "typeorm";
+import {Hrs} from "../hrs/hrs.entity";
 
 @Injectable()
 export class StudentsHrsService {
@@ -12,6 +15,7 @@ export class StudentsHrsService {
     constructor(
         @Inject(StudentsService) private studentsService: StudentsService,
         @Inject(HrsService) private hrsService: HrsService,
+        @Inject(DataSource) private dataSource: DataSource,
     ) {
     }
 
@@ -55,13 +59,27 @@ export class StudentsHrsService {
         }
     };
 
-    findAll() {
-        return `This action returns all studentsHrs`;
-    }
+    // async findHrAndStudents(hrId: string, currentPage: number = 1): Promise<PaginatedHrAndStudentsResponse> {
+    //     const itemsPerPage = 1;
+    //
+    //     const totalItems = await this.dataSource
+    //         .createQueryBuilder(Hrs, 'hrs')
+    //         .where('hrs.id = :hrsId', {hrsId: hrId})
+    //         .leftJoin('hrs.studentsHrs', 'studentsHrs')
+    //         .getCount()
+    //
+    //     console.log(totalItems)
+    //
+    //     return {
+    //         students: null,
+    //         totalItems,
+    //         totalPages: null,
+    //         itemsPerPage,
+    //         currentPage,
+    //     }
+    // }
 
-    findOne(id: number) {
-        return `This action returns a #${id} studentsHr`;
-    }
+    findOne(id: string) {}
 
     update(id: number, updateStudentsHrDto: UpdateStudentsHrDto) {
         return `This action updates a #${id} studentsHr`;
