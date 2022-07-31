@@ -33,25 +33,32 @@ export class HrsService {
             .where('studentsHrs.hrsId = :studentsHrsHrsId', {studentsHrsHrsId: id})
             .getCount()
 
-        const students = await this.dataSource
-            .createQueryBuilder(StudentsHrs, 'studentsHrs')
-            .select(['studentsHrs.createdAt', 'studentsProfile.firstName', 'studentsProfile.lastName', 'students.courseCompletion', 'students.courseEngagement', 'students.projectDegree', 'students.teamProjectDegree', 'expectedTypeWork.typeWork', 'studentsProfile.targetWorkCity', 'studentsProfile.expectedSalary', 'studentsProfile.canTakeApprenticeship', 'studentsProfile.monthsOfCommercialExp'])
-            .where('studentsHrs.hrsId = :studentsHrsHrsId', {studentsHrsHrsId: id})
-            .leftJoin('studentsHrs.students', 'students')
-            .leftJoin('students.studentsProfile', 'studentsProfile')
-            .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
-            .offset(itemsPerPage * (currentPage - 1))
-            .limit(itemsPerPage)
-            .execute()
+        if (!totalItems) {
+            return {
+                success: false,
+                message: `HR o podanym ID: ${id} nie istnieje!`
+            }
+        } else {
+            const students = await this.dataSource
+                .createQueryBuilder(StudentsHrs, 'studentsHrs')
+                .select(['studentsHrs.createdAt', 'studentsProfile.firstName', 'studentsProfile.lastName', 'students.courseCompletion', 'students.courseEngagement', 'students.projectDegree', 'students.teamProjectDegree', 'expectedContractType.typeContract', 'studentsProfile.targetWorkCity', 'studentsProfile.expectedSalary', 'studentsProfile.canTakeApprenticeship', 'studentsProfile.monthsOfCommercialExp'])
+                .where('studentsHrs.hrsId = :studentsHrsHrsId', {studentsHrsHrsId: id})
+                .leftJoin('studentsHrs.students', 'students')
+                .leftJoin('students.studentsProfile', 'studentsProfile')
+                .leftJoin('students.expectedContractType', 'expectedContractType')
+                .offset(itemsPerPage * (currentPage - 1))
+                .limit(itemsPerPage)
+                .execute()
 
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-        return {
-            students,
-            totalItems,
-            totalPages,
-            itemsPerPage,
-            currentPage,
+            return {
+                students,
+                totalItems,
+                totalPages,
+                itemsPerPage,
+                currentPage,
+            }
         }
     }
 
