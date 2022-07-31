@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Res } from '@nestjs/common';
 import { PasswordService } from './password.service';
 import { Response } from 'express';
-import { PasswordRecovery } from './entities/password.entity';
+import { PasswordRecovery, PasswordReset } from './entities/password.entity';
 
 @Controller('password')
 export class PasswordController {
@@ -13,5 +13,13 @@ export class PasswordController {
     @Res() res: Response,
   ): Promise<string> {
     return this.passwordService.passwordRecovery(req, res);
+  }
+
+  @Post('/reset')
+  async passwordReset(
+    @Body() req: PasswordReset,
+    @Res() res: Response,
+  ): Promise<string> {
+    return this.passwordService.passwordReset(req, res);
   }
 }

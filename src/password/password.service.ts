@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { PasswordRecovery } from './entities/password.entity';
+import { PasswordRecovery, PasswordReset } from './entities/password.entity';
 import { User } from '../user/user.entity';
 import { Response } from 'express';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
+import { hashPwd } from '../utils/hash-pwd';
 
 @Injectable()
 export class PasswordService {
@@ -17,7 +18,6 @@ export class PasswordService {
           email,
         },
       });
-      console.log(user.pwdHash);
       //
       // if there is user, create recovery link
       //
@@ -33,19 +33,61 @@ export class PasswordService {
           expiresIn: '10m',
         });
 
-        const link = `localhost:3001/pwd-recovery/${user.id}/${token}`;
+        const link = `http://localhost:3001/pwd-recovery/${user.id}/${token}`;
 
         console.log(link);
 
         return res.json({
           msg: 'recovery link został wysłany na podany adres',
+          link: link,
         });
+        //
+        // send email with recovery
+        //
       }
       return res.json({
         msg: 'no user in db',
       });
     } catch (e) {
       return res.json({ error: e.message });
+    }
+  }
+
+  async passwordReset(req: PasswordReset, res: Response): Promise<any> {
+    // console.log(req);
+    const { id, token, password1, password2 } = req;
+
+    //
+    // Check is user is in db
+    //
+    const user = await User.findOne({
+      where: { id },
+    });
+    // console.log(user);
+    if (user.id !== id) {
+      return res.json({
+        msg: 'Brak usera o podanym id',
+      });
+    }
+
+    const secret = process.env.JWT_SECRET + user.pwdHash;
+
+    // hash password and update
+    try {
+      const payload = verify(token, secret);
+      await User.update(
+        {
+          id: payload.id,
+        },
+        {
+          pwdHash: await hashPwd(password1),
+        },
+      );
+      res.json({
+        msg: 'Hasło zostało zmienione',
+      });
+    } catch (e) {
+      return res.json({ msg: e.message });
     }
   }
 
