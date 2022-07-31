@@ -1,12 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PasswordRecovery, PasswordReset } from './entities/password.entity';
 import { User } from '../user/user.entity';
 import { Response } from 'express';
 import { sign, verify } from 'jsonwebtoken';
 import { hashPwd } from '../utils/hash-pwd';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class PasswordService {
+  constructor(@Inject(MailService) private mailService: MailService) {}
   async passwordRecovery(req: PasswordRecovery, res: Response): Promise<any> {
     const { email } = req;
     try {
@@ -36,14 +38,22 @@ export class PasswordService {
         const link = `http://localhost:3001/pwd-recovery/${user.id}/${token}`;
 
         console.log(link);
-
+        //
+        // send email with recovery
+        //
+        try {
+          await this.mailService.sendMail(
+            user.email,
+            'testowa waiadomosc',
+            `<p>link do resetu hasla to: <a href=${link}>Kliknij by zresetowac haslo</a></p>`,
+          );
+        } catch (e) {
+          console.log(e.message);
+        }
         return res.json({
           msg: 'recovery link został wysłany na podany adres',
           link: link,
         });
-        //
-        // send email with recovery
-        //
       }
       return res.json({
         msg: 'no user in db',
