@@ -10,6 +10,7 @@ export interface StudentsHrsResponse {
 
 export type PaginatedHrAndStudentsResponse = {
     students: StudentsHrs[];
+    photoUrl: string;
     totalItems: number;
     totalPages: number;
     itemsPerPage: number;

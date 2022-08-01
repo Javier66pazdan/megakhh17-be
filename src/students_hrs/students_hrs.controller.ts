@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, Res} from '@nestjs/common';
 import { StudentsHrsService } from './students_hrs.service';
 import { CreateStudentsHrDto } from './dto/create-students_hr.dto';
 import { UpdateStudentsHrDto } from './dto/update-students_hr.dto';
@@ -21,6 +21,14 @@ export class StudentsHrsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.studentsHrsService.findOne(id);
+  }
+
+  @Get('/students/:id/:pageNo')
+  hrStudents(
+      @Param('id') id: string,
+      @Param('pageNo') pageNo: number,
+  ): Promise<PaginatedHrAndStudentsResponse> {
+    return this.studentsHrsService.getHrStudents(id, pageNo)
   }
 
   @Patch(':id')

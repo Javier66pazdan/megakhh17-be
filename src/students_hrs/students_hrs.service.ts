@@ -5,9 +5,8 @@ import {PaginatedHrAndStudentsResponse, StudentsHrsResponse} from "../interfaces
 import {StudentsHrs} from "./students_hrs.entity";
 import {StudentsService} from "../students/students.service";
 import {HrsService} from "../hrs/hrs.service";
-import {Student} from "../interfaces/students";
 import {DataSource} from "typeorm";
-import {Hrs} from "../hrs/hrs.entity";
+
 
 @Injectable()
 export class StudentsHrsService {
@@ -59,27 +58,49 @@ export class StudentsHrsService {
         }
     };
 
-    // async findHrAndStudents(hrId: string, currentPage: number = 1): Promise<PaginatedHrAndStudentsResponse> {
-    //     const itemsPerPage = 1;
-    //
-    //     const totalItems = await this.dataSource
-    //         .createQueryBuilder(Hrs, 'hrs')
-    //         .where('hrs.id = :hrsId', {hrsId: hrId})
-    //         .leftJoin('hrs.studentsHrs', 'studentsHrs')
-    //         .getCount()
-    //
-    //     console.log(totalItems)
-    //
-    //     return {
-    //         students: null,
-    //         totalItems,
-    //         totalPages: null,
-    //         itemsPerPage,
-    //         currentPage,
-    //     }
-    // }
+    async getHrStudents(id: string, currentPage: number = 1): Promise<PaginatedHrAndStudentsResponse> {
 
-    findOne(id: string) {}
+        const itemsPerPage = 2;
+
+        const totalItems = await this.dataSource
+            .createQueryBuilder(StudentsHrs, 'studentsHrs')
+            .where('studentsHrs.hrsId = :studentsHrsHrsId', {studentsHrsHrsId: id})
+            .getCount()
+
+        if (!totalItems) {
+            return {
+                success: false,
+                message: `HR o podanym ID: ${id} nie istnieje!`
+            }
+        } else {
+            const students = await this.dataSource
+                .createQueryBuilder(StudentsHrs, 'studentsHrs')
+                .select(['studentsHrs.createdAt', 'studentsProfile.firstName', 'studentsProfile.lastName', 'students.courseCompletion', 'students.courseEngagement', 'students.projectDegree', 'students.teamProjectDegree', 'expectedContractType.typeContract', 'studentsProfile.targetWorkCity', 'studentsProfile.expectedSalary', 'studentsProfile.canTakeApprenticeship', 'studentsProfile.monthsOfCommercialExp', 'studentsProfile.githubUsername'])
+                .where('studentsHrs.hrsId = :studentsHrsHrsId', {studentsHrsHrsId: id})
+                .leftJoin('studentsHrs.students', 'students')
+                .leftJoin('students.studentsProfile', 'studentsProfile')
+                .leftJoin('students.expectedContractType', 'expectedContractType')
+                .offset(itemsPerPage * (currentPage - 1))
+                .limit(itemsPerPage)
+                .execute()
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            const photoUrl = `https://github.com/${students.studentsProfile_githubUsername}.png`;
+
+            return {
+                students,
+                photoUrl,
+                totalItems,
+                totalPages,
+                itemsPerPage,
+                currentPage
+            }
+        }
+    }
+
+    findOne(id: string) {
+    }
 
     update(id: number, updateStudentsHrDto: UpdateStudentsHrDto) {
         return `This action updates a #${id} studentsHr`;
