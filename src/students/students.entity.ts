@@ -62,8 +62,8 @@ export class Students extends BaseEntity {
     @OneToOne(type => StudentsHrs, entity => entity.students)
     studentsHrs: StudentsHrs;
 
-    @OneToMany(type => StudentsProfile, entity => entity.students)
-    studentsProfile: StudentsProfile[];
+    @OneToOne(type => StudentsProfile, entity => entity.students)
+    studentsProfile: StudentsProfile;
 
     @ManyToOne(type => ExpectedTypeWork, entity => entity.id)
     expectedTypeWork: ExpectedTypeWork[];
