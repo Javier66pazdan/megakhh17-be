@@ -66,8 +66,8 @@ export class Students extends BaseEntity {
     // @JoinColumn()
     studentsHrs: StudentsHrs;
 
-    @OneToMany(type => StudentsProfile, entity => entity.students)
-    studentsProfile: StudentsProfile[];
+    @OneToOne(type => StudentsProfile, entity => entity.students)
+    studentsProfile: StudentsProfile;
 
     @ManyToOne(type => ExpectedTypeWork, entity => entity.id)
     @JoinColumn()
