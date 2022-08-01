@@ -62,16 +62,18 @@ export class Students extends BaseEntity {
     @JoinColumn()
     user: User;
 
-    @ManyToOne(type => StudentsHrs, entity => entity.students)
-    @JoinColumn()
+    @OneToOne(type => StudentsHrs, entity => entity.students)
+    // @JoinColumn()
     studentsHrs: StudentsHrs;
 
     @OneToMany(type => StudentsProfile, entity => entity.students)
     studentsProfile: StudentsProfile[];
 
-    @OneToMany(type => ExpectedTypeWork, entity => entity.id)
+    @ManyToOne(type => ExpectedTypeWork, entity => entity.id)
+    @JoinColumn()
     expectedTypeWork: ExpectedTypeWork[];
 
-    @OneToMany(type => ExpectedContractType, entity => entity.id)
+    @ManyToOne(type => ExpectedContractType, entity => entity.id)
+    @JoinColumn()
     expectedContractType: ExpectedContractType[];
 }

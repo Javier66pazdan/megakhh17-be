@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
 import { Students } from "../students/students.entity";
 
 @Entity()
@@ -7,15 +7,16 @@ export class ExpectedContractType extends BaseEntity {
     id: string;
 
     @Column({
-        length: 25
+        length: 35
     })
     typeContract: string;
 
     @Column({
         default: () => 'CURRENT_TIMESTAMP',
+        select: false,
     })
     createdAt: Date;
 
-    @ManyToOne(type => Students, entity => entity.expectedContractType)
+    @OneToMany(type => Students, entity => entity.expectedContractType)
     students: Students;
 }
