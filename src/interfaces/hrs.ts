@@ -4,6 +4,6 @@ export interface RegisterHrs {
 }
 
 export type GetHrsResponse = RegisterHrs | {
-    isSuccessful: false;
+    success: false;
     message: string;
 }

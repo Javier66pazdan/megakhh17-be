@@ -1,9 +1,9 @@
 import {Body, Controller, Get, Inject, Param, Post} from '@nestjs/common';
 import {HrsService} from "./hrs.service";
 import {GetHrsResponse} from "../interfaces/hrs";
-import {RegisterDto} from "../user/dto/register.dto";
-import {RegisterUserResponse} from "../interfaces/user";
+
 import {RegisterHrsDto} from "./dto/registerHrs.dto";
+import {Hrs} from "./hrs.entity";
 
 @Controller('hrs')
 export class HrsController {
@@ -20,10 +20,10 @@ export class HrsController {
         return this.hrsService.register(newHr);
     }
 
-    @Get('/users/:hrId')
-    hrAndUsers(
-        @Param('hrId') hrId: string
-    ): Promise<GetHrsResponse> {
-        return this.hrsService.getHrAndUsers(hrId)
+    @Get('/:id')
+    oneHr(
+        @Param('id') id: string
+    ): Promise<Hrs> {
+        return this.hrsService.getOneHr(id)
     }
 }

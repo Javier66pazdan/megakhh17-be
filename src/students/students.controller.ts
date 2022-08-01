@@ -11,6 +11,11 @@ export class StudentsController {
     ) {
     }
 
+    @Get('/')
+    allStudents(): Promise<AllStudentsResponse> {
+        return this.studentsService.getAllStudents();
+    }
+
     @Get('/:id')
     oneStudent(
         @Param('id') id: string

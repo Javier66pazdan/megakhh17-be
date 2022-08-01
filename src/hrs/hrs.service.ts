@@ -1,10 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import {Inject, Injectable} from '@nestjs/common';
 import {GetHrsResponse} from "../interfaces/hrs";
 import {Hrs} from "./hrs.entity";
 import {RegisterHrsDto} from "./dto/registerHrs.dto";
+import {DataSource} from "typeorm";
 
 @Injectable()
 export class HrsService {
+
+    constructor(
+        @Inject(DataSource) private dataSource: DataSource,
+    ) {
+    }
 
     async register(newHr: RegisterHrsDto): Promise<GetHrsResponse> {
         const hr = new Hrs();
@@ -16,14 +22,7 @@ export class HrsService {
         return hr;
     }
 
-    async getHrAndUsers(id: string): Promise<GetHrsResponse> {
-        const hrToGet = await Hrs.findOne({where: {id}, relations: ['user']});
-        if (!hrToGet) {
-            return {
-                isSuccessful: false,
-                message: `Hr with ID: '${id}' doesn't exist!`
-            }
-        }
-        return hrToGet;
+    async getOneHr(id: string): Promise<Hrs> {
+        return await Hrs.findOne({where: {id}});
     }
 }
