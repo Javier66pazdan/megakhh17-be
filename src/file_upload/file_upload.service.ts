@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CsvParser } from 'nest-csv-parser'
-import { Readable } from "stream";
+import { CsvParser } from 'nest-csv-parser';
+import { Readable } from 'stream';
 
 class Student {
   imie: string;
@@ -10,11 +10,7 @@ class Student {
 
 @Injectable()
 export class FileUploadService {
-
-  constructor(
-    private readonly csvParser: CsvParser
-  ) {
-  }
+  constructor(private readonly csvParser: CsvParser) {}
 
   bufferToStream(buffer: Buffer) {
     const stream = new Readable();
