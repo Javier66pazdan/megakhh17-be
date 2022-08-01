@@ -1,4 +1,4 @@
-import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {BaseEntity, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn} from "typeorm";
 import {Students} from "../students/students.entity";
 
 @Entity()
@@ -11,7 +11,7 @@ export class StudentsHrs extends BaseEntity {
     })
     createdAt: Date;
 
-    @ManyToOne(type => Students, entity => entity.studentsHrs)
+    @OneToOne(type => Students, entity => entity.studentsHrs)
     @JoinColumn()
     students: Students;
 }
