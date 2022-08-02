@@ -13,6 +13,8 @@ import { StudentsHrsModule } from './students_hrs/students_hrs.module';
 import { StudentsUrlsModule } from './students_urls/students_urls.module';
 import { ExpectedTypeWorkModule } from './expected_type_work/expected_type_work.module';
 import { ExpectedContractTypeModule } from './expected_contract_type/expected_contract_type.module';
+import { PasswordModule } from './password/password.module';
+import { MailModule } from './mail/mail.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 
 @Module({
@@ -30,7 +32,19 @@ import { FileUploadModule } from './file_upload/file_upload.module';
       logging: true,
       synchronize: true,
     }),
-    AuthModule, UserModule, StudentsModule, HrsModule, RoleModule, StudentsProfileModule, StudentsHrsModule, StudentsUrlsModule, ExpectedTypeWorkModule, ExpectedContractTypeModule, FileUploadModule
+    AuthModule,
+    UserModule,
+    StudentsModule,
+    HrsModule,
+    RoleModule,
+    StudentsProfileModule,
+    StudentsHrsModule,
+    StudentsUrlsModule,
+    ExpectedTypeWorkModule,
+    ExpectedContractTypeModule,
+    PasswordModule,
+    MailModule,
+    FileUploadModule
   ],
   controllers: [AppController],
   providers: [AppService],
