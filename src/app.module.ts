@@ -30,7 +30,7 @@ import { FileUploadModule } from './file_upload/file_upload.module';
       entities: ["./dist/**/*.entity{.ts,.js}"],
       bigNumberStrings: false,
       logging: true,
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     UserModule,

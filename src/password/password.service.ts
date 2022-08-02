@@ -12,6 +12,10 @@ export class PasswordService {
 
   async passwordRecovery(req: PasswordRecovery, res: Response): Promise<any> {
     const { email } = req;
+    console.log(email);
+    if (!email) {
+      return { message: 'email jest undefined' };
+    }
     try {
       //
       // chack is user in db
@@ -21,6 +25,8 @@ export class PasswordService {
           email,
         },
       });
+
+      console.log(user);
       //
       // if there is user, create recovery link
       //
@@ -41,11 +47,10 @@ export class PasswordService {
         //
         // send email with recovery
         //
-        try {
-          await this.mailService.sendMail(
-            user.email,
-            'Reset hasła w serwisie: hh-17.pl',
-            `<div>
+        await this.mailService.sendMail(
+          user.email,
+          'Reset hasła w serwisie: hh-17.pl',
+          `<div>
                   <p>Aby zresetować hasło <a href='${link}'>Kliknij tutaj</a></p>
                   <p>Jeśli link nie działa, wklej następujący odnośnik w okno przeglądarki: </p>
                   <p>${link}</p>
@@ -57,24 +62,22 @@ export class PasswordService {
                   <p>Pozdrawiamy</p>
                   <p>Zespół hh17.pl</p>
                   </div>`,
-          );
-        } catch (e) {
-          console.log(e.message);
-        }
+        );
         return res.json({
-          msg: 'recovery link został wysłany na podany adres',
+          message:
+            'recovery link został wysłany na podany adres, tym razem front nie działa',
         });
       }
+    } catch (err) {
+      console.error('Cant Find user in DB user in DB');
+      console.log(err.message);
       return res.json({
-        msg: 'no user in db',
+        message: 'Brak użytkownika o podanym adresie w naszej bazie danych',
       });
-    } catch (e) {
-      return res.json({ error: e.message });
     }
   }
 
   async passwordReset(req: PasswordReset, res: Response): Promise<any> {
-    // console.log(req);
     const { id, token, password1, password2 } = req;
 
     //
@@ -83,10 +86,9 @@ export class PasswordService {
     const user = await User.findOne({
       where: { id },
     });
-    // console.log(user);
     if (user.id !== id) {
       return res.json({
-        msg: 'Brak usera o podanym id',
+        message: 'Brak usera o podanym id',
       });
     }
 
@@ -104,7 +106,7 @@ export class PasswordService {
         },
       );
       res.json({
-        msg: 'Hasło zostało zmienione',
+        message: 'Hasło zostało zmienione',
       });
     } catch (e) {
       return res.json({ msg: e.message });
