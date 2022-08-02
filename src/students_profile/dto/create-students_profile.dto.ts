@@ -1,5 +1,3 @@
-import {Students} from "../../students/students.entity";
-
 export class CreateStudentsProfileDto {
   email: string;
   tel: string;
@@ -18,4 +16,3 @@ export class CreateStudentsProfileDto {
   courses: string;
 }
 
-export type UpdateProfile = CreateStudentsProfileDto, Students
