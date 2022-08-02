@@ -25,4 +25,10 @@ export class AuthController {
       @Res() res: Response) {
     return this.authService.logout(user, res);
   }
+
+  @Get('/message')
+  @UseGuards(AuthGuard('jwt'))
+  getHello(): string {
+    return this.authService.getHello();
+  }
 }

@@ -10,3 +10,10 @@ export interface Student {
 
 export type AllStudentsResponse = Student[];
 
+export interface PaginatedAllStudentsResponse {
+  allStudents: Student[];
+  totalItems: number;
+  totalPages: number;
+  itemsPerPage: number;
+  currentPage: number;
+}
