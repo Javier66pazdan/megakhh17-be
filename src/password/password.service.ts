@@ -9,6 +9,7 @@ import { MailService } from '../mail/mail.service';
 @Injectable()
 export class PasswordService {
   constructor(@Inject(MailService) private mailService: MailService) {}
+
   async passwordRecovery(req: PasswordRecovery, res: Response): Promise<any> {
     const { email } = req;
     try {
@@ -35,24 +36,33 @@ export class PasswordService {
           expiresIn: '10m',
         });
 
-        const link = `http://localhost:3001/pwd-recovery/${user.id}/${token}`;
+        const link = `${process.env.FRONT_URL}/pwd-recovery/${user.id}/${token}`;
 
-        console.log(link);
         //
         // send email with recovery
         //
         try {
           await this.mailService.sendMail(
             user.email,
-            'testowa waiadomosc',
-            `<p>link do resetu hasla to: <a href=${link}>Kliknij by zresetowac haslo</a></p>`,
+            'Reset hasła w serwisie: hh-17.pl',
+            `<div>
+                  <p>Aby zresetować hasło <a href='${link}'>Kliknij tutaj</a></p>
+                  <p>Jeśli link nie działa, wklej następujący odnośnik w okno przeglądarki: </p>
+                  <p>${link}</p>
+                  <br/>
+                  <p>Jeśli to nie Ty wysłałeś prośbę o zmianę hasła, zignoruj tego maila.</p>
+                  <br/>
+                  <p>Link pozostanie aktywny przez najbliższe 10 minut</p>
+                  <br/>
+                  <p>Pozdrawiamy</p>
+                  <p>Zespół hh17.pl</p>
+                  </div>`,
           );
         } catch (e) {
           console.log(e.message);
         }
         return res.json({
           msg: 'recovery link został wysłany na podany adres',
-          link: link,
         });
       }
       return res.json({
