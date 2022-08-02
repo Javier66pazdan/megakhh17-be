@@ -3,6 +3,8 @@ import { RegisterDto } from './dto/register.dto';
 import { RegisterUserResponse } from '../interfaces/user';
 import { User } from './user.entity';
 import { hashPwd } from '../utils/hash-pwd';
+import { Role } from '../role/role.entity';
+import { v4 as uuid } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -15,6 +17,20 @@ export class UserService {
     const user = new User();
     user.email = newUser.email;
     user.pwdHash = await hashPwd(newUser.pwd);
+
+    const role = await Role.findOne({ where: { type: newUser.roleName } });
+
+    if (!role) {
+      return {
+        isSuccessful: false,
+        message: 'Nie znaleziono podanej roli.',
+      };
+    }
+    user.role = role;
+
+    if (newUser.roleName === 'student') {
+      user.registerToken = uuid();
+    }
 
     if (await User.findOne({ where: { email: user.email } })) {
       return {
