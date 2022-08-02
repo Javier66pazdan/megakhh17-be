@@ -1,4 +1,6 @@
+
 import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+
 import { Students } from "../students/students.entity";
 
 @Entity()
@@ -7,7 +9,7 @@ export class ExpectedContractType extends BaseEntity {
     id: string;
 
     @Column({
-        length: 35
+        length: 25
     })
     typeContract: string;
 
