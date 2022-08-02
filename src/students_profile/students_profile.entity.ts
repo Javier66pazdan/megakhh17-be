@@ -48,6 +48,11 @@ export class StudentsProfile extends BaseEntity {
   @Column({
     length: 255,
   })
+  githubPhotoUrl: string;
+
+  @Column({
+    length: 255,
+  })
   portfolioUrls: string;
 
   @Column({

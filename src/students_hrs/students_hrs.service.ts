@@ -6,6 +6,7 @@ import {StudentsHrs} from "./students_hrs.entity";
 import {StudentsService} from "../students/students.service";
 import {HrsService} from "../hrs/hrs.service";
 import {DataSource} from "typeorm";
+import {StudentsProfile} from "../students_profile/students_profile.entity";
 
 
 @Injectable()
@@ -70,12 +71,13 @@ export class StudentsHrsService {
         if (!totalItems) {
             return {
                 success: false,
-                message: `HR o podanym ID: ${id} nie istnieje!`
+                message: `HR o podanym ID: ${id} nie ma przypisanych studentów lub nie istnieje!`
             }
         } else {
+
             const students = await this.dataSource
                 .createQueryBuilder(StudentsHrs, 'studentsHrs')
-                .select(['studentsHrs.createdAt', 'studentsProfile.firstName', 'studentsProfile.lastName', 'students.courseCompletion', 'students.courseEngagement', 'students.projectDegree', 'students.teamProjectDegree', 'expectedContractType.typeContract', 'studentsProfile.targetWorkCity', 'studentsProfile.expectedSalary', 'studentsProfile.canTakeApprenticeship', 'studentsProfile.monthsOfCommercialExp', 'studentsProfile.githubUsername'])
+                .select(['studentsHrs.createdAt', 'studentsProfile.firstName', 'studentsProfile.lastName', 'students.courseCompletion', 'students.courseEngagement', 'students.projectDegree', 'students.teamProjectDegree', 'expectedContractType.typeContract', 'studentsProfile.targetWorkCity', 'studentsProfile.expectedSalary', 'studentsProfile.canTakeApprenticeship', 'studentsProfile.monthsOfCommercialExp', 'studentsProfile.githubUsername', 'studentsProfile.githubPhotoUrl'])
                 .where('studentsHrs.hrsId = :studentsHrsHrsId', {studentsHrsHrsId: id})
                 .leftJoin('studentsHrs.students', 'students')
                 .leftJoin('students.studentsProfile', 'studentsProfile')
@@ -86,11 +88,8 @@ export class StudentsHrsService {
 
             const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-            const photoUrl = `https://github.com/${students.studentsProfile_githubUsername}.png`;
-
             return {
                 students,
-                photoUrl,
                 totalItems,
                 totalPages,
                 itemsPerPage,

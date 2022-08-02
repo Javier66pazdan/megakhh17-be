@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { StudentsProfileService } from './students_profile.service';
 import { CreateStudentsProfileDto } from './dto/create-students_profile.dto';
 import { UpdateStudentsProfileDto } from './dto/update-students_profile.dto';
+import {StudentsProfileUpdateResponse} from "../interfaces/students_profile";
 
 @Controller('students-profile')
 export class StudentsProfileController {
@@ -23,8 +24,10 @@ export class StudentsProfileController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStudentsProfileDto: UpdateStudentsProfileDto) {
-    return this.studentsProfileService.update(+id, updateStudentsProfileDto);
+  update(
+      @Param('id') id: string,
+      @Body() updateStudentsProfileDto: UpdateStudentsProfileDto): Promise<StudentsProfileUpdateResponse> {
+    return this.studentsProfileService.update(id, updateStudentsProfileDto);
   }
 
   @Delete(':id')
