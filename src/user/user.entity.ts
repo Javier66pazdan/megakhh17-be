@@ -2,11 +2,11 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
+  Generated,
   ManyToOne,
-  OneToMany, OneToOne,
-  PrimaryGeneratedColumn
-} from "typeorm";
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Hrs } from '../hrs/hrs.entity';
 import { Students } from '../students/students.entity';
 import { Role } from '../role/role.entity';
@@ -32,9 +32,7 @@ export class User extends BaseEntity {
   currentTokenId: string;
 
   @Column({
-    length: 50,
-    nullable: false,
-    select: false,
+    default: null,
   })
   registerToken: string;
 

@@ -9,4 +9,9 @@ export class RegisterDto {
     message: 'Hasło powinno składać się z co najmniej 8 znaków.',
   })
   pwd: string;
+
+  @Length(2, 7, {
+    message: 'Nazwa roli powinna mieć między 2 a 7 znaków.',
+  })
+  roleName: string;
 }
