@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import mailerconfig = require('../mailerconfig');
+import mailerconfig = require('../../mailerconfig');
 import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './mail.service';
 

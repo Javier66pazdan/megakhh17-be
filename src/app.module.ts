@@ -29,7 +29,7 @@ import { MailModule } from './mail/mail.module';
       entities: ['./dist/**/*.entity{.ts,.js}'],
       bigNumberStrings: false,
       logging: true,
-      synchronize: true,
+      synchronize: false,
     }),
     AuthModule,
     UserModule,

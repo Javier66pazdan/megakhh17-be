@@ -12,6 +12,8 @@ export class PasswordService {
 
   async passwordRecovery(req: PasswordRecovery, res: Response): Promise<any> {
     const { email } = req;
+    console.log(email);
+
     try {
       //
       // chack is user in db
@@ -21,10 +23,14 @@ export class PasswordService {
           email,
         },
       });
+      if (user === undefined) {
+        console.log('cosn poszlo nie tak');
+      }
+      console.log(user);
       //
       // if there is user, create recovery link
       //
-      if (user) {
+      if (user !== undefined) {
         //creating recovery link valid for 10 mins
 
         const secret = process.env.JWT_SECRET + user.pwdHash;
@@ -41,11 +47,10 @@ export class PasswordService {
         //
         // send email with recovery
         //
-        try {
-          await this.mailService.sendMail(
-            user.email,
-            'Reset hasła w serwisie: hh-17.pl',
-            `<div>
+        await this.mailService.sendMail(
+          user.email,
+          'Reset hasła w serwisie: hh-17.pl',
+          `<div>
                   <p>Aby zresetować hasło <a href='${link}'>Kliknij tutaj</a></p>
                   <p>Jeśli link nie działa, wklej następujący odnośnik w okno przeglądarki: </p>
                   <p>${link}</p>
@@ -57,24 +62,21 @@ export class PasswordService {
                   <p>Pozdrawiamy</p>
                   <p>Zespół hh17.pl</p>
                   </div>`,
-          );
-        } catch (e) {
-          console.log(e.message);
-        }
+        );
         return res.json({
-          msg: 'recovery link został wysłany na podany adres',
+          message:
+            'recovery link został wysłany na podany adres, tym razem front nie działa',
         });
       }
-      return res.json({
-        msg: 'no user in db',
-      });
     } catch (e) {
-      return res.json({ error: e.message });
+      console.error('Cant Find user in DB user in DB');
+      return res.json({
+        message: 'Brak użytkownika o podanym adresie w naszej bazie danych',
+      });
     }
   }
 
   async passwordReset(req: PasswordReset, res: Response): Promise<any> {
-    // console.log(req);
     const { id, token, password1, password2 } = req;
 
     //
@@ -83,10 +85,9 @@ export class PasswordService {
     const user = await User.findOne({
       where: { id },
     });
-    // console.log(user);
     if (user.id !== id) {
       return res.json({
-        msg: 'Brak usera o podanym id',
+        message: 'Brak usera o podanym id',
       });
     }
 
@@ -104,7 +105,7 @@ export class PasswordService {
         },
       );
       res.json({
-        msg: 'Hasło zostało zmienione',
+        message: 'Hasło zostało zmienione',
       });
     } catch (e) {
       return res.json({ msg: e.message });
