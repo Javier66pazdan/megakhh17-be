@@ -5,7 +5,7 @@ export = {
     secure: true,
     auth: {
       user: 'test@kolodziejdev.pl',
-      pass: '9e)A;$[&',
+      pass: '9e)A;$aa',
     },
   },
   defaults: {

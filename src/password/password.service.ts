@@ -13,7 +13,9 @@ export class PasswordService {
   async passwordRecovery(req: PasswordRecovery, res: Response): Promise<any> {
     const { email } = req;
     console.log(email);
-
+    if (!email) {
+      return { message: 'email jest undefined' };
+    }
     try {
       //
       // chack is user in db
@@ -23,14 +25,12 @@ export class PasswordService {
           email,
         },
       });
-      if (user === undefined) {
-        console.log('cosn poszlo nie tak');
-      }
+
       console.log(user);
       //
       // if there is user, create recovery link
       //
-      if (user !== undefined) {
+      if (user) {
         //creating recovery link valid for 10 mins
 
         const secret = process.env.JWT_SECRET + user.pwdHash;
@@ -68,8 +68,9 @@ export class PasswordService {
             'recovery link został wysłany na podany adres, tym razem front nie działa',
         });
       }
-    } catch (e) {
+    } catch (err) {
       console.error('Cant Find user in DB user in DB');
+      console.log(err.message);
       return res.json({
         message: 'Brak użytkownika o podanym adresie w naszej bazie danych',
       });
