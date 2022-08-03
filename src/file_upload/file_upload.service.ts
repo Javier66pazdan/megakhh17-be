@@ -53,7 +53,6 @@ export class FileUploadService {
       }
 
       if (newUser) {
-        //@TODO: Save student
         const studentDto = {
           courseCompletion: student.courseCompletion,
           courseEngagement: student.courseEngagement,
