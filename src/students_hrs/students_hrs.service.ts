@@ -6,8 +6,6 @@ import {StudentsHrs} from "./students_hrs.entity";
 import {StudentsService} from "../students/students.service";
 import {HrsService} from "../hrs/hrs.service";
 import {DataSource} from "typeorm";
-import {StudentsProfile} from "../students_profile/students_profile.entity";
-
 
 @Injectable()
 export class StudentsHrsService {

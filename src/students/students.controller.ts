@@ -1,7 +1,6 @@
 import {Controller, Get, Inject, Param} from '@nestjs/common';
 import {StudentsService} from "./students.service";
-import {AllStudentsResponse, PaginatedAllStudentsResponse, Student} from "../interfaces/students";
-import {Paginate, Paginated, PaginateQuery} from "nestjs-paginate";
+import {PaginatedAllStudentsResponse, Student} from "../interfaces/students";
 
 @Controller('students')
 export class StudentsController {
@@ -11,10 +10,10 @@ export class StudentsController {
     ) {
     }
 
-    @Get('/')
-    allStudents(): Promise<AllStudentsResponse> {
-        return this.studentsService.getAllStudents();
-    }
+    // @Get('/')
+    // allStudents(): Promise<AllStudentsResponse> {
+    //     return this.studentsService.getAllStudents();
+    // }
 
     @Get('/:id')
     oneStudent(

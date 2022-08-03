@@ -41,7 +41,7 @@ export class StudentsService {
         }
     }
 
-    async getOneStudent(id: string): Promise<Student> {
+    async getOneStudent(id: string): Promise<Students> {
         return await this.datasource
             .createQueryBuilder(Students, 'students')
             .where('students.id = :studentsId', {studentsId: id})
