@@ -1,12 +1,12 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
-  AllStudentsResponse,
+  AllStudentsResponse, GetOneStudentResponse,
   PaginatedAllStudentsResponse,
   Student,
 } from '../interfaces/students';
 import { StudentsDto } from './dto/students.dto';
-// import {Paginate, Paginated, PaginateQuery} from "nestjs-paginate";
+import {Students} from "./students.entity";
 
 @Controller('students')
 export class StudentsController {
@@ -20,7 +20,7 @@ export class StudentsController {
   // }
 
   @Get('/:id')
-  oneStudent(@Param('id') id: string): Promise<Student> {
+  oneStudent(@Param('id') id: string): Promise<GetOneStudentResponse> {
     return this.studentsService.getOneStudent(id);
   }
 

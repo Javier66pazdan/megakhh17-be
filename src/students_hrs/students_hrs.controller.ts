@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Res,
 } from '@nestjs/common';
 import { StudentsHrsService } from './students_hrs.service';
 import { CreateStudentsHrDto } from './dto/create-students_hr.dto';
@@ -15,13 +14,11 @@ import {
   PaginatedHrAndStudentsResponse,
   StudentsHrsResponse,
 } from '../interfaces/students_hrs';
-import { HrsService } from '../hrs/hrs.service';
 
 @Controller('students-hrs')
 export class StudentsHrsController {
   constructor(
     private readonly studentsHrsService: StudentsHrsService,
-    private readonly hrsService: HrsService,
   ) {}
 
   @Post()
@@ -30,11 +27,6 @@ export class StudentsHrsController {
   ): Promise<StudentsHrsResponse> {
     return this.studentsHrsService.create(createStudentsHrDto);
   }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.studentsHrsService.findOne(id);
-  // }
 
   @Get('/students/:id/:pageNo')
   hrStudents(
