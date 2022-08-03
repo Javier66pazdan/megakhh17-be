@@ -12,45 +12,42 @@ export class PasswordService {
 
   async passwordRecovery(req: PasswordRecovery, res: Response): Promise<any> {
     const { email } = req;
-    console.log(email);
-    if (!email) {
-      return { message: 'email jest undefined' };
-    }
-    try {
-      //
-      // chack is user in db
-      //
-      const user = await User.findOne({
-        where: {
-          email,
-        },
-      });
 
-      console.log(user);
-      //
-      // if there is user, create recovery link
-      //
-      if (user) {
-        //creating recovery link valid for 10 mins
-
-        const secret = process.env.JWT_SECRET + user.pwdHash;
-        const payload = {
-          email: user.email,
-          id: user.id,
-        };
-        const token = sign(payload, secret, {
-          expiresIn: '10m',
+    if (email) {
+      try {
+        //
+        // chack is user in db
+        //
+        const user = await User.findOne({
+          where: {
+            email,
+          },
         });
 
-        const link = `${process.env.FRONT_URL}/pwd-recovery/${user.id}/${token}`;
+        //
+        // if there is user, create recovery link
+        //
+        if (user) {
+          //creating recovery link valid for 10 mins
 
-        //
-        // send email with recovery
-        //
-        await this.mailService.sendMail(
-          user.email,
-          'Reset hasła w serwisie: hh-17.pl',
-          `<div>
+          const secret = process.env.JWT_SECRET + user.pwdHash;
+          const payload = {
+            email: user.email,
+            id: user.id,
+          };
+          const token = sign(payload, secret, {
+            expiresIn: '10m',
+          });
+
+          const link = `${process.env.FRONT_URL}/pwd-recovery/${user.id}/${token}`;
+
+          //
+          // send email with recovery
+          //
+          await this.mailService.sendMail(
+            user.email,
+            'Reset hasła w serwisie: hh-17.pl',
+            `<div>
                   <p>Aby zresetować hasło <a href='${link}'>Kliknij tutaj</a></p>
                   <p>Jeśli link nie działa, wklej następujący odnośnik w okno przeglądarki: </p>
                   <p>${link}</p>
@@ -62,18 +59,19 @@ export class PasswordService {
                   <p>Pozdrawiamy</p>
                   <p>Zespół hh17.pl</p>
                   </div>`,
-        );
+          );
+          return res.json({
+            message:
+              'recovery link został wysłany na podany adres, tym razem front nie działa',
+          });
+        }
+      } catch (err) {
+        console.error('Cant Find user in DB user in DB');
+        console.log(err.message);
         return res.json({
-          message:
-            'recovery link został wysłany na podany adres, tym razem front nie działa',
+          message: 'Brak użytkownika o podanym adresie w naszej bazie danych',
         });
       }
-    } catch (err) {
-      console.error('Cant Find user in DB user in DB');
-      console.log(err.message);
-      return res.json({
-        message: 'Brak użytkownika o podanym adresie w naszej bazie danych',
-      });
     }
   }
 
