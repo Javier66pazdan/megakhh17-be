@@ -6,8 +6,7 @@ import {StudentsHrs} from "./students_hrs.entity";
 import {StudentsService} from "../students/students.service";
 import {HrsService} from "../hrs/hrs.service";
 import {DataSource} from "typeorm";
-import {StudentsProfile} from "../students_profile/students_profile.entity";
-
+import {Students} from "../students/students.entity";
 
 @Injectable()
 export class StudentsHrsService {
@@ -25,7 +24,7 @@ export class StudentsHrsService {
             const {hrId, studentId} = createStudentsHrDto;
 
             const hr = await this.hrsService.getOneHr(hrId);
-            const student = await this.studentsService.getOneStudent(studentId);
+            const student = await Students.findOne({where: {id: studentId}});
 
             if (!hr) {
                 return {
