@@ -8,6 +8,11 @@ export interface Student {
   status: number;
 }
 
+export type GetOneStudentResponse = Student | {
+  success: boolean;
+  message: string;
+}
+
 export type AllStudentsResponse = Student[];
 
 export interface PaginatedAllStudentsResponse {
