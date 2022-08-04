@@ -1,6 +1,12 @@
-import {BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-import { Students } from "../students/students.entity";
+import { Students } from '../students/students.entity';
 
 @Entity()
 export class ExpectedTypeWork extends BaseEntity {
@@ -8,7 +14,7 @@ export class ExpectedTypeWork extends BaseEntity {
   id: string;
 
   @Column({
-    length: 25
+    length: 25,
   })
   typeWork: string;
 
@@ -18,6 +24,6 @@ export class ExpectedTypeWork extends BaseEntity {
   })
   createdAt: Date;
 
-  @OneToMany(type => Students, entity => entity.expectedTypeWork)
+  @OneToMany((type) => Students, (entity) => entity.expectedTypeWork)
   students: Students;
 }

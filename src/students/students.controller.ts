@@ -1,12 +1,13 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
-  AllStudentsResponse, GetOneStudentResponse,
+  AllStudentsResponse,
+  GetOneStudentResponse,
   PaginatedAllStudentsResponse,
   Student,
 } from '../interfaces/students';
 import { StudentsDto } from './dto/students.dto';
-import {Students} from "./students.entity";
+import { Students } from './students.entity';
 
 @Controller('students')
 export class StudentsController {

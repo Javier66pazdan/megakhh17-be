@@ -1,5 +1,5 @@
 export class RegisterHrsDto {
-    fullName: string;
-    company: string;
-    maxReservedStudents: number;
+  fullName: string;
+  company: string;
+  maxReservedStudents: number;
 }

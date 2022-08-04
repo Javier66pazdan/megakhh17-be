@@ -9,7 +9,9 @@ describe('ExpectedContactTypeService', () => {
       providers: [ExpectedContactTypeService],
     }).compile();
 
-    service = module.get<ExpectedContactTypeService>(ExpectedContactTypeService);
+    service = module.get<ExpectedContactTypeService>(
+      ExpectedContactTypeService,
+    );
   });
 
   it('should be defined', () => {

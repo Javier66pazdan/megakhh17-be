@@ -3,7 +3,8 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne, OneToOne,
+  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Students } from '../students/students.entity';

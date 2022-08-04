@@ -1,6 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Students } from './students.entity';
-import {GetOneStudentResponse, PaginatedAllStudentsResponse} from '../interfaces/students';
+import {
+  GetOneStudentResponse,
+  PaginatedAllStudentsResponse,
+} from '../interfaces/students';
 import { DataSource } from 'typeorm';
 import { StudentsDto } from './dto/students.dto';
 import { User } from '../user/user.entity';
@@ -52,35 +55,33 @@ export class StudentsService {
   }
 
   async getOneStudent(id: string): Promise<GetOneStudentResponse> {
+    const findStudent = await Students.findOne({ where: { id } });
 
-      const findStudent = await Students.findOne({where: {id}});
-
-      if (!findStudent) {
-          return {
-              success: false,
-              message: `Student o podanym ID: ${id} nie istnieje`,
-          }
-      } else {
-
-          return await this.datasource
-              .createQueryBuilder(Students, 'students')
-              .where('students.id = :studentsId', {studentsId: id})
-              .select([
-                  'students.courseCompletion',
-                  'students.courseEngagement',
-                  'students.projectDegree',
-                  'students.teamProjectDegree',
-                  'studentsProfile.firstName',
-                  'studentsProfile.lastName',
-                  'studentsProfile.targetWorkCity',
-                  'studentsProfile.expectedSalary',
-                  'studentsProfile.canTakeApprenticeship',
-                  'studentsProfile.monthsOfCommercialExp',
-                  'studentsProfile.workExperience',
-              ])
-              .leftJoin('students.studentsProfile', 'studentsProfile')
-              .execute();
-      }
+    if (!findStudent) {
+      return {
+        success: false,
+        message: `Student o podanym ID: ${id} nie istnieje`,
+      };
+    } else {
+      return await this.datasource
+        .createQueryBuilder(Students, 'students')
+        .where('students.id = :studentsId', { studentsId: id })
+        .select([
+          'students.courseCompletion',
+          'students.courseEngagement',
+          'students.projectDegree',
+          'students.teamProjectDegree',
+          'studentsProfile.firstName',
+          'studentsProfile.lastName',
+          'studentsProfile.targetWorkCity',
+          'studentsProfile.expectedSalary',
+          'studentsProfile.canTakeApprenticeship',
+          'studentsProfile.monthsOfCommercialExp',
+          'studentsProfile.workExperience',
+        ])
+        .leftJoin('students.studentsProfile', 'studentsProfile')
+        .execute();
+    }
   }
 
   async addStudent(newStudent: StudentsDto) {

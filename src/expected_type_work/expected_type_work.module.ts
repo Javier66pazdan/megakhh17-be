@@ -4,6 +4,6 @@ import { ExpectedTypeWorkService } from './expected_type_work.service';
 
 @Module({
   controllers: [ExpectedTypeWorkController],
-  providers: [ExpectedTypeWorkService]
+  providers: [ExpectedTypeWorkService],
 })
 export class ExpectedTypeWorkModule {}

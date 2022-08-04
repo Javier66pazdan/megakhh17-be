@@ -1,4 +1,4 @@
 export class GetHrStudentsDto {
-    id: string;
-    pageNo: number;
+  id: string;
+  pageNo: number;
 }
