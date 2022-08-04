@@ -9,7 +9,6 @@ import { StudentsHrs } from './students_hrs.entity';
 import { StudentsService } from '../students/students.service';
 import { HrsService } from '../hrs/hrs.service';
 import { DataSource } from 'typeorm';
-import { StudentsProfile } from '../students_profile/students_profile.entity';
 import { Students } from '../students/students.entity';
 
 @Injectable()
@@ -23,42 +22,50 @@ export class StudentsHrsService {
   async create(
     createStudentsHrDto: CreateStudentsHrDto,
   ): Promise<StudentsHrsResponse> {
-    try {
-      const { hrId, studentId } = createStudentsHrDto;
+    const { hrId, studentId } = createStudentsHrDto;
 
-      // const hr = await this.hrsService.getOneHr(hrId);
-      // const student = await this.studentsService.getOneStudent(studentId);
-      const hr = await this.hrsService.getOneHr(hrId);
-      const student = await Students.findOne({ where: { id: studentId } });
+    const hr = await this.hrsService.getOneHr(hrId);
+    const student = await Students.findOne({ where: { id: studentId } });
 
-      if (!hr) {
-        return {
-          success: false,
-          message: `HR o podanym ID: ${hrId} nie istnieje!`,
-        };
-      } else if (!student) {
-        return {
-          success: false,
-          message: `Student o podanym ID: ${studentId} nie istnieje!`,
-        };
-      } else {
-        const studentHr = new StudentsHrs();
-        await studentHr.save();
-
-        studentHr.hrs = hr;
-        studentHr.students = student;
-
-        await studentHr.save();
-
-        return {
-          success: true,
-          message: `Student o ID: ${studentId} został pomyślnie przypisany do HR o ID: ${hrId}`,
-        };
-      }
-    } catch (e) {
+    const findStudentHr = await StudentsHrs.findOne({
+      relations: {
+        students: true,
+      },
+      where: {
+        students: {
+          id: studentId,
+        },
+      },
+    });
+    if (findStudentHr) {
       return {
         success: false,
         message: `Student o podanym ID jest już przypisany do HR o podanym ID`,
+      };
+    }
+
+    if (!hr) {
+      return {
+        success: false,
+        message: `HR o podanym ID: ${hrId} nie istnieje!`,
+      };
+    } else if (!student) {
+      return {
+        success: false,
+        message: `Student o podanym ID: ${studentId} nie istnieje!`,
+      };
+    } else {
+      const studentHr = new StudentsHrs();
+      await studentHr.save();
+
+      studentHr.hrs = hr;
+      studentHr.students = student;
+
+      await studentHr.save();
+
+      return {
+        success: true,
+        message: `Student o ID: ${studentId} został pomyślnie przypisany do HR o ID: ${hrId}`,
       };
     }
   }

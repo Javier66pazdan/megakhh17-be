@@ -9,7 +9,9 @@ describe('ExpectedTypeWorkController', () => {
       controllers: [ExpectedTypeWorkController],
     }).compile();
 
-    controller = module.get<ExpectedTypeWorkController>(ExpectedTypeWorkController);
+    controller = module.get<ExpectedTypeWorkController>(
+      ExpectedTypeWorkController,
+    );
   });
 
   it('should be defined', () => {

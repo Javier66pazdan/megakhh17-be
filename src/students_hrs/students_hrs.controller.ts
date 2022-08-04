@@ -17,9 +17,7 @@ import {
 
 @Controller('students-hrs')
 export class StudentsHrsController {
-  constructor(
-    private readonly studentsHrsService: StudentsHrsService,
-  ) {}
+  constructor(private readonly studentsHrsService: StudentsHrsService) {}
 
   @Post()
   create(

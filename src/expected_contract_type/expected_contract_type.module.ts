@@ -4,6 +4,6 @@ import { ExpectedContractTypeService } from './expected_contract_type.service';
 
 @Module({
   controllers: [ExpectedContractTypeController],
-  providers: [ExpectedContractTypeService]
+  providers: [ExpectedContractTypeService],
 })
 export class ExpectedContractTypeModule {}

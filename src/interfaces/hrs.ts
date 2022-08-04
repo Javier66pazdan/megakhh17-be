@@ -1,9 +1,11 @@
 export interface RegisterHrs {
-    id: string;
-    fullName: string;
+  id: string;
+  fullName: string;
 }
 
-export type GetHrsResponse = RegisterHrs | {
-    success: false;
-    message: string;
-}
+export type GetHrsResponse =
+  | RegisterHrs
+  | {
+      success: false;
+      message: string;
+    };

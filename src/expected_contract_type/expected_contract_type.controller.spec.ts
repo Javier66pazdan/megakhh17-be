@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import {ExpectedContractTypeController} from './expected_contract_type.controller';
+import { ExpectedContractTypeController } from './expected_contract_type.controller';
 
 describe('ExpectedContractTypeController', () => {
   let controller: ExpectedContractTypeController;
@@ -9,7 +9,9 @@ describe('ExpectedContractTypeController', () => {
       controllers: [ExpectedContractTypeController],
     }).compile();
 
-    controller = module.get<ExpectedContractTypeController>(ExpectedContractTypeController);
+    controller = module.get<ExpectedContractTypeController>(
+      ExpectedContractTypeController,
+    );
   });
 
   it('should be defined', () => {

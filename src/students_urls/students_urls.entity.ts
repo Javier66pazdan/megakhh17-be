@@ -1,5 +1,12 @@
-import { BaseEntity, Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Students } from "../students/students.entity";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Students } from '../students/students.entity';
 
 @Entity()
 export class StudentsUrls extends BaseEntity {
@@ -16,9 +23,7 @@ export class StudentsUrls extends BaseEntity {
   })
   createdAt: Date;
 
-  @OneToOne(
-    type => Students,
-    entity => entity.id)
+  @OneToOne((type) => Students, (entity) => entity.id)
   @JoinColumn()
   student: Students;
 }
