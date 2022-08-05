@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Param,
-  Patch,
-} from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
   GetOneStudentResponse,
