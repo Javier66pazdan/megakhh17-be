@@ -1,6 +1,10 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { HrsService } from './hrs.service';
-import { GetHrsResponse } from '../interfaces/hrs';
+import {
+  GetHrsResponse,
+  GetOneHrResponse,
+  HrsFailedResponse,
+} from '../interfaces/hrs';
 
 import { RegisterHrsDto } from './dto/registerHrs.dto';
 import { Hrs } from './hrs.entity';
@@ -15,7 +19,14 @@ export class HrsController {
   }
 
   @Get('/:id')
-  oneHr(@Param('id') id: string): Promise<Hrs> {
+  oneHr(
+    @Param('id') id: string,
+  ): Promise<HrsFailedResponse | GetOneHrResponse> {
     return this.hrsService.getOneHr(id);
+  }
+
+  @Get('/')
+  getAllHrs(): Promise<Hrs[]> {
+    return this.hrsService.getAllHrs();
   }
 }

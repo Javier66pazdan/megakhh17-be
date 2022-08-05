@@ -10,6 +10,7 @@ import { StudentsService } from '../students/students.service';
 import { HrsService } from '../hrs/hrs.service';
 import { DataSource } from 'typeorm';
 import { Students } from '../students/students.entity';
+import { Hrs } from '../hrs/hrs.entity';
 
 @Injectable()
 export class StudentsHrsService {
@@ -24,7 +25,7 @@ export class StudentsHrsService {
   ): Promise<StudentsHrsResponse> {
     const { hrId, studentId } = createStudentsHrDto;
 
-    const hr = await this.hrsService.getOneHr(hrId);
+    const hr = await Hrs.findOne({ where: { id: hrId } });
     const student = await Students.findOne({ where: { id: studentId } });
 
     const findStudentHr = await StudentsHrs.findOne({
