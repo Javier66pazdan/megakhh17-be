@@ -114,8 +114,15 @@ export class StudentsService {
     id: string,
     updateStudentProfile: UpdateStudentProfileDto,
   ): Promise<StudentsProfileUpdateResponse> {
-    const findStudent = await Students.findOne({ where: { id } });
-
+    const findStudent = await Students.findOne({
+      relations: {
+        expectedContractType: true,
+      },
+      where: {
+        id,
+      },
+    });
+    console.log(findStudent);
     if (!findStudent) {
       return {
         success: false,
@@ -125,6 +132,7 @@ export class StudentsService {
     const findProfile = await Students.findOne({
       relations: {
         studentsProfile: true,
+        expectedContractType: true,
       },
       where: {
         id,
@@ -148,9 +156,11 @@ export class StudentsService {
         education,
         workExperience,
         courses,
+        expectedContractType,
       } = updateStudentProfile;
 
       findStudent.bonusProjectUrls = bonusProjectUrls;
+      // findStudent.expectedContractType[] = expectedContractType[1];
 
       studentNewProfile.email = email;
       studentNewProfile.tel = tel;
@@ -172,7 +182,7 @@ export class StudentsService {
 
       return {
         success: true,
-        message: `Profil studenta o ID: ${id} został stworzony.`,
+        message: `Profil studenta o ID: ${id} został utworzony.`,
       };
     } else {
       const {
@@ -190,6 +200,7 @@ export class StudentsService {
         education,
         workExperience,
         courses,
+        expectedContractType,
       } = updateStudentProfile;
 
       findStudent.bonusProjectUrls = bonusProjectUrls;
