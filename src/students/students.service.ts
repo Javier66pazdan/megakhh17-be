@@ -17,8 +17,8 @@ export class StudentsService {
 
   async getAllAvailableStudents(
     currentPage = 1,
+    itemsPerPage,
   ): Promise<PaginatedAllStudentsResponse> {
-    const itemsPerPage = 2;
 
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')

@@ -18,11 +18,12 @@ export class StudentsController {
     return this.studentsService.getOneStudent(id);
   }
 
-  @Get('/all/:pageNo')
+  @Get('/all/:pageNo/:itemsPerPage')
   allAvailableStudents(
     @Param('pageNo') pageNo: number,
+    @Param('itemsPerPage') itemsPerPage: number,
   ): Promise<PaginatedAllStudentsResponse> {
-    return this.studentsService.getAllAvailableStudents(pageNo);
+    return this.studentsService.getAllAvailableStudents(pageNo, itemsPerPage);
   }
 
   @Patch('/student-profile/:id')

@@ -25,5 +25,5 @@ export class ExpectedTypeWork extends BaseEntity {
   createdAt: Date;
 
   @OneToMany((type) => Students, (entity) => entity.expectedTypeWork)
-  students: Students;
+  students: Students[];
 }

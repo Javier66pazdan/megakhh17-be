@@ -68,13 +68,15 @@ export class Students extends BaseEntity {
   @JoinColumn()
   studentsProfile: StudentsProfile;
 
-  @ManyToOne((type) => ExpectedTypeWork, (entity) => entity.id)
+  @ManyToOne((type) => ExpectedTypeWork, (entity) => entity.id, {
+    cascade: true,
+  })
   @JoinColumn()
-  expectedTypeWork: ExpectedTypeWork[];
+  expectedTypeWork: ExpectedTypeWork;
 
   @ManyToOne((type) => ExpectedContractType, (entity) => entity.id, {
     cascade: true,
   })
   @JoinColumn()
-  expectedContractType: ExpectedContractType[];
+  expectedContractType: ExpectedContractType;
 }

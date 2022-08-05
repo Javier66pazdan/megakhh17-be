@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,6 +19,7 @@ export class ExpectedContractType extends BaseEntity {
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',
+    select: false,
   })
   createdAt: Date;
 
