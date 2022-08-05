@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { StudentsProfileService } from './students_profile.service';
 import { CreateStudentsProfileDto } from './dto/create-students_profile.dto';
-import { UpdateStudentsProfileDto } from './dto/update-students_profile.dto';
-import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
+// import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
+// import { UpdateStudentProfileDto } from "./dto/updateStudentProfileDto";
 
 @Controller('students-profile')
 export class StudentsProfileController {
@@ -33,13 +33,13 @@ export class StudentsProfileController {
     return this.studentsProfileService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateStudentsProfileDto: UpdateStudentsProfileDto,
-  ): Promise<StudentsProfileUpdateResponse> {
-    return this.studentsProfileService.update(id, updateStudentsProfileDto);
-  }
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateStudentsProfileDto: UpdateStudentProfileDto,
+  // ): Promise<StudentsProfileUpdateResponse> {
+  //   return this.studentsProfileService.update(id, updateStudentsProfileDto);
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

@@ -3,6 +3,7 @@ import { CreateStudentsProfileDto } from './dto/create-students_profile.dto';
 import { UpdateStudentsProfileDto } from './dto/update-students_profile.dto';
 import { StudentsProfile } from './students_profile.entity';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
+import { UpdateStudentProfileDto } from './dto/updateStudentProfileDto';
 
 @Injectable()
 export class StudentsProfileService {
@@ -57,24 +58,31 @@ export class StudentsProfileService {
     return `This action returns a #${id} studentsProfile`;
   }
 
-  async update(
-    id: string,
-    updateProfile: UpdateStudentsProfileDto,
-  ): Promise<StudentsProfileUpdateResponse> {
-    const profileToUpdate = await StudentsProfile.findOne({ where: { id } });
-    if (!profileToUpdate) {
-      return {
-        success: false,
-        message: `Student o podanym ID: ${id} nie istnieje!`,
-      };
-    } else {
-      await StudentsProfile.update(id, updateProfile);
-    }
-    return {
-      success: true,
-      message: `Profil studenta o podanym ID: ${id} został zaktualizowany.`,
-    };
-  }
+  // async update(
+  //   id: string,
+  //   updateProfile: UpdateStudentProfileDto,
+  // ): Promise<StudentsProfileUpdateResponse> {
+  //   const profileToUpdate = await StudentsProfile.findOne({
+  //     relations: {
+  //       students: true,
+  //     },
+  //     where: {
+  //       students: { id },
+  //     },
+  //   });
+  //   if (!profileToUpdate) {
+  //     return {
+  //       success: false,
+  //       message: `Student o podanym ID: ${id} nie istnieje!`,
+  //     };
+  //   } else {
+  //     await StudentsProfile.update(id, updateProfile);
+  //   }
+  //   return {
+  //     success: true,
+  //     message: `Profil studenta o podanym ID: ${id} został zaktualizowany.`,
+  //   };
+  // }
 
   remove(id: number) {
     return `This action removes a #${id} studentsProfile`;

@@ -4,7 +4,6 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -55,9 +54,6 @@ export class Students extends BaseEntity {
   })
   createdAt: Date;
 
-  // @OneToMany(type => User, entity => entity.students)
-  // user: User[];
-
   @OneToOne((type) => User, (entity) => entity.students)
   @JoinColumn()
   user: User;
@@ -66,14 +62,19 @@ export class Students extends BaseEntity {
   // @JoinColumn()
   studentsHrs: StudentsHrs;
 
-  @OneToOne((type) => StudentsProfile, (entity) => entity.students)
+  @OneToOne((type) => StudentsProfile, (entity) => entity.students, {
+    cascade: true,
+  })
+  @JoinColumn()
   studentsProfile: StudentsProfile;
 
   @ManyToOne((type) => ExpectedTypeWork, (entity) => entity.id)
   @JoinColumn()
   expectedTypeWork: ExpectedTypeWork[];
 
-  @ManyToOne((type) => ExpectedContractType, (entity) => entity.id)
+  @ManyToOne((type) => ExpectedContractType, (entity) => entity.id, {
+    cascade: true,
+  })
   @JoinColumn()
   expectedContractType: ExpectedContractType[];
 }

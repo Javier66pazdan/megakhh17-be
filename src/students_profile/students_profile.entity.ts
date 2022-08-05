@@ -105,6 +105,5 @@ export class StudentsProfile extends BaseEntity {
   createdAt: Date;
 
   @OneToOne((type) => Students, (entity) => entity.studentsProfile)
-  @JoinColumn()
   students: Students;
 }
