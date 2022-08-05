@@ -5,7 +5,6 @@ import {
   Inject,
   Param,
   Patch,
-  Post,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
@@ -14,8 +13,6 @@ import {
 } from '../interfaces/students';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
-import { RegisterHrsDto } from '../hrs/dto/registerHrs.dto';
-import { GetHrsResponse } from '../interfaces/hrs';
 
 @Controller('students')
 export class StudentsController {
@@ -34,14 +31,6 @@ export class StudentsController {
   ): Promise<PaginatedAllStudentsResponse> {
     return this.studentsService.getAllAvailableStudents(pageNo);
   }
-
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateStudentsProfileDto: UpdateStudentProfileDto,
-  // ): Promise<StudentsProfileUpdateResponse> {
-  //   return this.studentsService.update(id, updateStudentsProfileDto);
-  // }
 
   @Patch('/student-profile/:id')
   update(

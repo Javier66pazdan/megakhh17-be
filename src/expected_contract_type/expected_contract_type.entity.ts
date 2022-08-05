@@ -14,7 +14,7 @@ export class ExpectedContractType extends BaseEntity {
   id: string;
 
   @Column({
-    length: 25,
+    length: 35,
   })
   typeContract: string;
 
