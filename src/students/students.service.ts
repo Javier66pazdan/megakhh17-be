@@ -10,6 +10,7 @@ import { User } from '../user/user.entity';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { StudentsProfile } from '../students_profile/students_profile.entity';
+import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
 
 @Injectable()
 export class StudentsService {
@@ -19,7 +20,6 @@ export class StudentsService {
     currentPage = 1,
     itemsPerPage,
   ): Promise<PaginatedAllStudentsResponse> {
-
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
       .where('students.status = :studentsStatus', { studentsStatus: 3 })
@@ -39,9 +39,11 @@ export class StudentsService {
         'studentsProfile.canTakeApprenticeship',
         'studentsProfile.monthsOfCommercialExp',
         'studentsProfile.workExperience',
+        'expectedContractType.typeContract',
       ])
       .where('students.status = :studentsStatus', { studentsStatus: 3 })
       .leftJoin('students.studentsProfile', 'studentsProfile')
+      .leftJoin('students.expectedContractType', 'expectedContractType')
       .offset(itemsPerPage * (currentPage - 1))
       .limit(itemsPerPage)
       .execute();
@@ -138,6 +140,16 @@ export class StudentsService {
         id,
       },
     });
+    console.log(findProfile);
+
+    if (findStudent.expectedContractType === null) {
+      const studentTypeContract = new ExpectedContractType();
+      studentTypeContract.id = updateStudentProfile.expectedContractType;
+
+      findStudent.expectedContractType = studentTypeContract;
+
+      await Students.save(findStudent);
+    }
 
     if (findProfile.studentsProfile === null) {
       const studentNewProfile = new StudentsProfile();
@@ -156,11 +168,9 @@ export class StudentsService {
         education,
         workExperience,
         courses,
-        expectedContractType,
       } = updateStudentProfile;
 
       findStudent.bonusProjectUrls = bonusProjectUrls;
-      // findStudent.expectedContractType[] = expectedContractType[1];
 
       studentNewProfile.email = email;
       studentNewProfile.tel = tel;
@@ -204,6 +214,7 @@ export class StudentsService {
       } = updateStudentProfile;
 
       findStudent.bonusProjectUrls = bonusProjectUrls;
+      findStudent.expectedContractType.id = expectedContractType;
 
       findProfile.studentsProfile.email = email;
       findProfile.studentsProfile.tel = tel;

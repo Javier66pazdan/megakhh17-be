@@ -7,6 +7,14 @@ import {
 } from 'typeorm';
 import { Students } from '../students/students.entity';
 
+//
+// export enum ContractTypes {
+//   ContractOfEmployment = 'Contract of employment',
+//   B2B = 'B2B',
+//   ContractOfEnterpriseOrMandate = 'Contract of enterprise or mandate',
+//   NoPreferences = 'No preferences',
+// }
+
 @Entity()
 export class ExpectedContractType extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')

@@ -74,9 +74,7 @@ export class Students extends BaseEntity {
   @JoinColumn()
   expectedTypeWork: ExpectedTypeWork;
 
-  @ManyToOne((type) => ExpectedContractType, (entity) => entity.id, {
-    cascade: true,
-  })
+  @ManyToOne((type) => ExpectedContractType, (entity) => entity.students)
   @JoinColumn()
   expectedContractType: ExpectedContractType;
 }
