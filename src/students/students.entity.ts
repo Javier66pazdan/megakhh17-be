@@ -68,9 +68,7 @@ export class Students extends BaseEntity {
   @JoinColumn()
   studentsProfile: StudentsProfile;
 
-  @ManyToOne((type) => ExpectedTypeWork, (entity) => entity.id, {
-    cascade: true,
-  })
+  @ManyToOne((type) => ExpectedTypeWork, (entity) => entity.students)
   @JoinColumn()
   expectedTypeWork: ExpectedTypeWork;
 

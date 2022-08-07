@@ -11,6 +11,7 @@ import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentPr
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { StudentsProfile } from '../students_profile/students_profile.entity';
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
+import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
 
 @Injectable()
 export class StudentsService {
@@ -119,28 +120,18 @@ export class StudentsService {
     const findStudent = await Students.findOne({
       relations: {
         expectedContractType: true,
+        expectedTypeWork: true,
       },
       where: {
         id,
       },
     });
-    console.log(findStudent);
     if (!findStudent) {
       return {
         success: false,
         message: `Student o podanym ID: ${id} nie istnieje!`,
       };
     }
-    const findProfile = await Students.findOne({
-      relations: {
-        studentsProfile: true,
-        expectedContractType: true,
-      },
-      where: {
-        id,
-      },
-    });
-    console.log(findProfile);
 
     if (findStudent.expectedContractType === null) {
       const studentTypeContract = new ExpectedContractType();
@@ -150,6 +141,24 @@ export class StudentsService {
 
       await Students.save(findStudent);
     }
+
+    if (findStudent.expectedTypeWork === null) {
+      const studentTypeWork = new ExpectedTypeWork();
+      studentTypeWork.id = updateStudentProfile.expectedTypeWork;
+
+      findStudent.expectedTypeWork = studentTypeWork;
+
+      await Students.save(findStudent);
+    }
+
+    const findProfile = await Students.findOne({
+      relations: {
+        studentsProfile: true,
+      },
+      where: {
+        id,
+      },
+    });
 
     if (findProfile.studentsProfile === null) {
       const studentNewProfile = new StudentsProfile();
@@ -211,10 +220,12 @@ export class StudentsService {
         workExperience,
         courses,
         expectedContractType,
+        expectedTypeWork,
       } = updateStudentProfile;
 
       findStudent.bonusProjectUrls = bonusProjectUrls;
       findStudent.expectedContractType.id = expectedContractType;
+      findStudent.expectedTypeWork.id = expectedTypeWork;
 
       findProfile.studentsProfile.email = email;
       findProfile.studentsProfile.tel = tel;
