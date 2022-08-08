@@ -3,6 +3,7 @@ import { Students } from './students.entity';
 import {
   GetOneStudentResponse,
   PaginatedAllStudentsResponse,
+  Student,
 } from '../interfaces/students';
 import { DataSource } from 'typeorm';
 import { StudentsDto } from './dto/students.dto';
@@ -29,6 +30,7 @@ export class StudentsService {
     const allStudents = await this.datasource
       .createQueryBuilder(Students, 'students')
       .select([
+        'students.id',
         'students.courseCompletion',
         'students.courseEngagement',
         'students.projectDegree',
@@ -58,6 +60,85 @@ export class StudentsService {
       itemsPerPage,
       currentPage,
     };
+  }
+
+  async getFilteredStudents(
+    pageNo: number,
+    itemsPerPage: number,
+    courseCompletion?: number,
+    courseEngagement?: number,
+    projectDegree?: number,
+    teamProjectDegree?: number,
+    expectedTypeWorkId?: string,
+    expectedContractTypeId?: string,
+    expectedSalary?: number,
+    canTakeApprenticeship?: number,
+    monthsOfCommercialExp?: number,
+  ): Promise<Student[]> {
+    // return await Students.find({
+    //   relations: { studentsProfile: true },
+    //   where: [
+    //     { courseCompletion },
+    //     { courseEngagement },
+    //     {
+    //       studentsProfile: [{ expectedSalary }],
+    //     },
+    //   ],
+    // });
+
+    return await this.datasource
+      .createQueryBuilder(Students, 'students')
+      // .select([
+      //   'students.courseCompletion',
+      //   'students.courseEngagement',
+      //   'students.projectDegree',
+      //   'students.teamProjectDegree',
+      //   'studentsProfile.expectedSalary',
+      //   'expectedContractType.typeContract',
+      //   'expectedTypeWork.typeWork',
+      //   'studentsProfile.canTakeApprenticeship',
+      //   'studentsProfile.monthsOfCommercialExp',
+      // ])
+      .where('students.courseCompletion = :courseCompletion', {
+        courseCompletion,
+      })
+      .andWhere('students.courseEngagement = :courseEngagement', {
+        courseEngagement,
+      })
+      .andWhere('students.projectDegree = :projectDegree', {
+        projectDegree,
+      })
+      .andWhere('students.teamProjectDegree = :teamProjectDegree', {
+        teamProjectDegree,
+      })
+      .andWhere('expectedContractType.id = :id', {
+        expectedContractTypeId,
+      })
+      // .andWhere('expectedTypeWork.typeWork = :typeWork', {
+      //   expectedTypeWorkId,
+      // })
+      .andWhere('studentsProfile.expectedSalary = :expectedSalary', {
+        expectedSalary,
+      })
+      .andWhere(
+        'studentsProfile.canTakeApprenticeship = :canTakeApprenticeship',
+        {
+          canTakeApprenticeship,
+        },
+      )
+      .andWhere(
+        'studentsProfile.monthsOfCommercialExp = :monthsOfCommercialExp',
+        {
+          monthsOfCommercialExp,
+        },
+      )
+      .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
+      .leftJoinAndSelect(
+        'students.expectedContractType',
+        'expectedContractType',
+      )
+      .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
+      .execute();
   }
 
   async getOneStudent(id: string): Promise<GetOneStudentResponse> {

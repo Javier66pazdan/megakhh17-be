@@ -3,6 +3,7 @@ import { StudentsService } from './students.service';
 import {
   GetOneStudentResponse,
   PaginatedAllStudentsResponse,
+  Student,
 } from '../interfaces/students';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
@@ -24,6 +25,37 @@ export class StudentsController {
     @Param('itemsPerPage') itemsPerPage: number,
   ): Promise<PaginatedAllStudentsResponse> {
     return this.studentsService.getAllAvailableStudents(pageNo, itemsPerPage);
+  }
+
+  @Get(
+    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractType/:expectedSalary/:canTakeApprenticeship/:monthsOfCommercialExp',
+  )
+  filteredStudents(
+    @Param('pageNo') pageNo: number,
+    @Param('itemsPerPage') itemsPerPage: number,
+    @Param('courseCompletion') courseCompletion: number,
+    @Param('courseEngagement') courseEngagement: number,
+    @Param('projectDegree') projectDegree: number,
+    @Param('teamProjectDegree') teamProjectDegree: number,
+    @Param('expectedTypeWorkId') expectedTypeWorkId: string,
+    @Param('expectedContractTypeId') expectedTypeContractId: string,
+    @Param('expectedSalary') expectedSalary: number,
+    @Param('canTakeApprenticeship') canTakeApprenticeship: number,
+    @Param('monthsOfCommercialExp') monthsOfCommercialExp: number,
+  ): Promise<Student[]> {
+    return this.studentsService.getFilteredStudents(
+      pageNo,
+      itemsPerPage,
+      courseCompletion,
+      courseEngagement,
+      projectDegree,
+      teamProjectDegree,
+      expectedTypeWorkId,
+      expectedTypeContractId,
+      expectedSalary,
+      canTakeApprenticeship,
+      monthsOfCommercialExp,
+    );
   }
 
   @Patch('/student-profile/:id')
