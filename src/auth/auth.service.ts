@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { User } from '../user/user.entity';
+import { Students } from '../students/students.entity';
 import { sign } from 'jsonwebtoken';
 import { v4 as uuid } from 'uuid';
 import { AuthLoginDto } from './dto/auth-login.dto';
 import { JwtPayload } from './jwt.strategy';
 import { comparePwd } from '../utils/compare-pwd';
+import { DataSource } from 'typeorm';
+import { StudentsProfile } from '../students_profile/students_profile.entity';
 
 @Injectable()
 export class AuthService {
-  private createToken(currentTokenId: string): {
+  constructor(@Inject(DataSource) private datasource: DataSource) {}
+
+  private static createToken(currentTokenId: string): {
     accessToken: string;
     expiresIn: number;
   } {
@@ -23,7 +28,7 @@ export class AuthService {
     };
   }
 
-  private async generateToken(user: User): Promise<string> {
+  private static async generateToken(user: User): Promise<string> {
     let token;
     let userWithThisToken = null;
     do {
@@ -47,7 +52,7 @@ export class AuthService {
           email,
         },
       });
-
+      console.log(user);
       if (!user) {
         return res.json({
           error: 'Użytkownik z podanym emailem nie istnieje.',
@@ -57,7 +62,35 @@ export class AuthService {
       const validPassword = await comparePwd(pwd, user.pwdHash);
 
       if (validPassword) {
-        const token = this.createToken(await this.generateToken(user));
+        const token = AuthService.createToken(
+          await AuthService.generateToken(user),
+        );
+
+        const userData: any = {};
+        const userId = await this.datasource
+          .createQueryBuilder(User, 'user')
+          .select([`user.id`, `user.role`])
+          .where(`user.id=:id`, { id: user.id })
+          .execute();
+
+        userData.id = userId[0].user_id;
+        userData.role = userId[0].roleId;
+
+        const studentId = await this.datasource
+          .createQueryBuilder(Students, 'students')
+          .select([`students.id`])
+          .where(`students.userId=:id`, { id: user.id })
+          .execute();
+        userData.studentId = studentId[0].students_id;
+
+        const studentProfile = await this.datasource
+          .createQueryBuilder(StudentsProfile, `students_profile`)
+          .select([`students_profile.firstName`])
+          .where(`students_profile.id=:id`, {
+            id: userData.studentId,
+          })
+          .execute();
+        userData.studentName = studentProfile[0].students_profile_firstName;
 
         return res
           .cookie('jwt', token.accessToken, {
@@ -65,7 +98,11 @@ export class AuthService {
             domain: 'localhost',
             httpOnly: true,
           })
-          .json({ ok: true });
+          .json({
+            id: userData.id,
+            name: userData.studentName,
+            role: userData.role[0],
+          });
       } else {
         return res
           .status(400)
