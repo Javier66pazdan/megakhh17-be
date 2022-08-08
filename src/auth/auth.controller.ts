@@ -21,6 +21,7 @@ export class AuthController {
   @Get('/logout')
   @UseGuards(AuthGuard('jwt'))
   async logout(@UserObj() user: User, @Res() res: Response) {
+    console.log('cos', user);
     return this.authService.logout(user, res);
   }
 
