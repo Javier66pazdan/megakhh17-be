@@ -28,21 +28,22 @@ export class StudentsController {
   }
 
   @Get(
-    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
+    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp/:searchText',
   )
   filteredStudents(
     @Param('pageNo') pageNo: number,
     @Param('itemsPerPage') itemsPerPage: number,
-    @Param('courseCompletion') courseCompletion: number,
-    @Param('courseEngagement') courseEngagement: number,
-    @Param('projectDegree') projectDegree: number,
-    @Param('teamProjectDegree') teamProjectDegree: number,
-    @Param('expectedTypeWorkId') expectedTypeWorkId: string,
-    @Param('expectedContractTypeId') expectedContractTypeId: string,
-    @Param('expectedSalaryMin') expectedSalaryMin: number,
-    @Param('expectedSalaryMax') expectedSalaryMax: number,
-    @Param('canTakeApprenticeship') canTakeApprenticeship: number,
-    @Param('monthsOfCommercialExp') monthsOfCommercialExp: number,
+    @Param('courseCompletion') courseCompletion?: number,
+    @Param('courseEngagement') courseEngagement?: number,
+    @Param('projectDegree') projectDegree?: number,
+    @Param('teamProjectDegree') teamProjectDegree?: number,
+    @Param('expectedTypeWorkId') expectedTypeWorkId?: string,
+    @Param('expectedContractTypeId') expectedContractTypeId?: string,
+    @Param('expectedSalaryMin') expectedSalaryMin?: number,
+    @Param('expectedSalaryMax') expectedSalaryMax?: number,
+    @Param('canTakeApprenticeship') canTakeApprenticeship?: number,
+    @Param('monthsOfCommercialExp') monthsOfCommercialExp?: number,
+    @Param('searchText') searchText?: string,
   ): Promise<PaginatedFilteredStudentsResponse> {
     return this.studentsService.getFilteredStudents(
       pageNo,
@@ -57,6 +58,7 @@ export class StudentsController {
       expectedSalaryMax,
       canTakeApprenticeship,
       monthsOfCommercialExp,
+      searchText,
     );
   }
 

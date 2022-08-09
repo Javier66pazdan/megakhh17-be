@@ -75,6 +75,7 @@ export class StudentsService {
     expectedSalaryMax?: number,
     canTakeApprenticeship?: number,
     monthsOfCommercialExp?: number,
+    searchText?: string,
   ): Promise<PaginatedFilteredStudentsResponse> {
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
@@ -84,7 +85,15 @@ export class StudentsService {
         'expectedContractType',
       )
       .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
-      .where('students.courseCompletion = :courseCompletion', {
+      .where(`MATCH(firstName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(lastName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(bio) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(education) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(courses) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(
+        `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
+      )
+      .andWhere('students.courseCompletion = :courseCompletion', {
         courseCompletion,
       })
       .andWhere('students.courseEngagement = :courseEngagement', {
@@ -129,7 +138,15 @@ export class StudentsService {
         'expectedContractType',
       )
       .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
-      .where('students.courseCompletion = :courseCompletion', {
+      .where(`MATCH(firstName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(lastName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(bio) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(education) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(courses) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(
+        `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
+      )
+      .andWhere('students.courseCompletion = :courseCompletion', {
         courseCompletion,
       })
       .andWhere('students.courseEngagement = :courseEngagement', {

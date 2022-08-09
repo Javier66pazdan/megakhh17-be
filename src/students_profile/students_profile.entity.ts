@@ -2,8 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
+  Index,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -25,16 +24,19 @@ export class StudentsProfile extends BaseEntity {
   })
   tel: string;
 
+  @Index({ fulltext: true })
   @Column({
     length: 57,
   })
   firstName: string;
 
+  @Index({ fulltext: true })
   @Column({
     length: 255,
   })
   lastName: string;
 
+  @Index({ fulltext: true })
   @Column({
     length: 255,
     default: null,
@@ -61,6 +63,7 @@ export class StudentsProfile extends BaseEntity {
   })
   projectUrls: string;
 
+  @Index({ fulltext: true })
   @Column({
     length: 255,
     default: null,
@@ -84,16 +87,19 @@ export class StudentsProfile extends BaseEntity {
   })
   monthsOfCommercialExp: number;
 
+  @Index({ fulltext: true })
   @Column({
     default: null,
   })
   education: string;
 
+  @Index({ fulltext: true })
   @Column({
     default: null,
   })
   workExperience: string;
 
+  @Index({ fulltext: true })
   @Column({
     default: null,
   })
