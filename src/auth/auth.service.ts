@@ -75,9 +75,10 @@ export class AuthService {
         if (userRole === 'admin') {
           return res
             .cookie('jwt', token.accessToken, {
-              secure: false,
-              domain: 'localhost',
+              secure: true,
+              // domain: 'localhost',
               httpOnly: true,
+              sameSite: 'none',
             })
             .json({
               email: user.email,
@@ -90,9 +91,10 @@ export class AuthService {
           }
           return res
             .cookie('jwt', token.accessToken, {
-              secure: false,
-              domain: 'localhost',
+              secure: true,
+              // domain: 'localhost',
               httpOnly: true,
+              // sameSite: 'none',
             })
             .json({
               role: 2,
@@ -119,9 +121,10 @@ export class AuthService {
 
           return res
             .cookie('jwt', token.accessToken, {
-              secure: false,
-              domain: 'localhost',
+              secure: true,
+              // domain: 'localhost',
               httpOnly: true,
+              // sameSite: 'none',
             })
             .json({
               role: 3,
@@ -154,9 +157,10 @@ export class AuthService {
       user.currentTokenId = null;
       await user.save();
       res.clearCookie('jwt', {
-        secure: false,
-        domain: 'localhost',
+        secure: true,
+        // domain: 'localhost',
         httpOnly: true,
+        sameSite: 'none',
       });
       return res.json({ ok: true });
     } catch (e) {
