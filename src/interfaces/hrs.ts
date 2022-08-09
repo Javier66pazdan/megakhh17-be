@@ -14,7 +14,7 @@ export interface GetOneHrResponse {
   id: string;
   fullName: string;
   company: string;
-  maxReservedStudents: number;
-  userId: string;
+  // maxReservedStudents: number;
+  // userId: string;
   userEmail: string;
 }

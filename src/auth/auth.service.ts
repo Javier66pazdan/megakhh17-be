@@ -9,10 +9,15 @@ import { JwtPayload } from './jwt.strategy';
 import { comparePwd } from '../utils/compare-pwd';
 import { DataSource } from 'typeorm';
 import { StudentsProfile } from '../students_profile/students_profile.entity';
+import { Role } from '../role/role.entity';
+import { HrsService } from '../hrs/hrs.service';
 
 @Injectable()
 export class AuthService {
-  constructor(@Inject(DataSource) private datasource: DataSource) {}
+  constructor(
+    @Inject(DataSource) private datasource: DataSource,
+    @Inject(HrsService) private readonly hrsService: HrsService,
+  ) {}
 
   private static createToken(currentTokenId: string): {
     accessToken: string;
@@ -47,12 +52,11 @@ export class AuthService {
   async login(req: AuthLoginDto, res: Response): Promise<any> {
     const { email, pwd } = req;
     try {
-      const user = await User.findOne({
-        where: {
-          email,
-        },
-      });
-      console.log(user);
+      const user = await User.createQueryBuilder('user')
+        .leftJoinAndSelect('user.role', 'role')
+        .where('user.email = :email', { email })
+        .getOne();
+
       if (!user) {
         return res.json({
           error: 'Użytkownik z podanym emailem nie istnieje.',
@@ -66,31 +70,59 @@ export class AuthService {
           await AuthService.generateToken(user),
         );
 
-        const userData: any = {};
-        const userId = await this.datasource
-          .createQueryBuilder(User, 'user')
-          .select([`user.id`, `user.role`])
-          .where(`user.id=:id`, { id: user.id })
-          .execute();
+        const userRole = user.role.type;
 
-        userData.id = userId[0].user_id;
-        userData.role = userId[0].roleId;
+        if (userRole === 'admin') {
+        } else if (userRole === 'hr') {
+          const hrData = await this.hrsService.getOneHr(user.id);
+          if ('error' in hrData) {
+            return res.json(hrData);
+          }
+          return res
+            .cookie('jwt', token.accessToken, {
+              secure: false,
+              domain: 'localhost',
+              httpOnly: true,
+            })
+            .json({
+              role: 2,
+              // @ts-ignore
+              id: hrData.id,
+              // @ts-ignore
+              fullName: hrData.fullName,
+              // @ts-ignore
+              company: hrData.company,
+              // @ts-ignore
+              userEmail: hrData.userEmail,
+            });
+        } else if (userRole === 'student') {
+        }
 
-        const studentId = await this.datasource
-          .createQueryBuilder(Students, 'students')
-          .select([`students.id`])
-          .where(`students.userId=:id`, { id: user.id })
-          .execute();
-        userData.studentId = studentId[0].students_id;
-
-        const studentProfile = await this.datasource
-          .createQueryBuilder(StudentsProfile, `students_profile`)
-          .select([`students_profile.firstName`])
-          .where(`students_profile.id=:id`, {
-            id: userData.studentId,
-          })
-          .execute();
-        userData.studentName = studentProfile[0].students_profile_firstName;
+        // const userData: any = {};
+        // const userId = await this.datasource
+        //   .createQueryBuilder(User, 'user')
+        //   .select([`user.id`, `user.role`])
+        //   .where(`user.id=:id`, { id: user.id })
+        //   .execute();
+        //
+        // userData.id = userId[0].user_id;
+        // userData.role = userId[0].roleId;
+        //
+        // const studentId = await this.datasource
+        //   .createQueryBuilder(Students, 'students')
+        //   .select([`students.id`])
+        //   .where(`students.userId=:id`, { id: user.id })
+        //   .execute();
+        // userData.studentId = studentId[0].students_id;
+        //
+        // const studentProfile = await this.datasource
+        //   .createQueryBuilder(StudentsProfile, `students_profile`)
+        //   .select([`students_profile.firstName`])
+        //   .where(`students_profile.id=:id`, {
+        //     id: userData.studentId,
+        //   })
+        //   .execute();
+        // userData.studentName = studentProfile[0].students_profile_firstName;
 
         return res
           .cookie('jwt', token.accessToken, {
@@ -99,9 +131,7 @@ export class AuthService {
             httpOnly: true,
           })
           .json({
-            id: userData.id,
-            name: userData.studentName,
-            role: userData.role[0],
+            id: user.role,
           });
       } else {
         return res

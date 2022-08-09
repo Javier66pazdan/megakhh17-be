@@ -72,8 +72,8 @@ export class HrsService {
       id: hr.id,
       fullName: hr.fullName,
       company: hr.company,
-      maxReservedStudents: hr.maxReservedStudents,
-      userId: hr.user.id,
+      // maxReservedStudents: hr.maxReservedStudents,
+      // userId: hr.user.id,
       userEmail: hr.user.email,
     };
 
