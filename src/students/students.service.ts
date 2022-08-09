@@ -96,16 +96,17 @@ export class StudentsService {
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
-      .andWhere('students.courseCompletion = :courseCompletion', {
+      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .andWhere('students.courseCompletion >= :courseCompletion', {
         courseCompletion,
       })
-      .andWhere('students.courseEngagement = :courseEngagement', {
+      .andWhere('students.courseEngagement >= :courseEngagement', {
         courseEngagement,
       })
-      .andWhere('students.projectDegree = :projectDegree', {
+      .andWhere('students.projectDegree >= :projectDegree', {
         projectDegree,
       })
-      .andWhere('students.teamProjectDegree = :teamProjectDegree', {
+      .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
         teamProjectDegree,
       })
       .andWhere('expectedTypeWork.id = :id', {
@@ -126,7 +127,7 @@ export class StudentsService {
         },
       )
       .andWhere(
-        'studentsProfile.monthsOfCommercialExp = :monthsOfCommercialExp',
+        'studentsProfile.monthsOfCommercialExp >= :monthsOfCommercialExp',
         {
           monthsOfCommercialExp,
         },
@@ -152,16 +153,17 @@ export class StudentsService {
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
-      .andWhere('students.courseCompletion = :courseCompletion', {
+      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .andWhere('students.courseCompletion >= :courseCompletion', {
         courseCompletion,
       })
-      .andWhere('students.courseEngagement = :courseEngagement', {
+      .andWhere('students.courseEngagement >= :courseEngagement', {
         courseEngagement,
       })
-      .andWhere('students.projectDegree = :projectDegree', {
+      .andWhere('students.projectDegree >= :projectDegree', {
         projectDegree,
       })
-      .andWhere('students.teamProjectDegree = :teamProjectDegree', {
+      .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
         teamProjectDegree,
       })
       .andWhere('expectedTypeWork.id = :id', {
@@ -182,7 +184,7 @@ export class StudentsService {
         },
       )
       .andWhere(
-        'studentsProfile.monthsOfCommercialExp = :monthsOfCommercialExp',
+        'studentsProfile.monthsOfCommercialExp >= :monthsOfCommercialExp',
         {
           monthsOfCommercialExp,
         },
