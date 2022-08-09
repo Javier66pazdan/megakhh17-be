@@ -2,9 +2,9 @@ import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
   GetOneStudentResponse,
-  PaginatedAllStudentsResponse,
-  Student,
-} from '../interfaces/students';
+  PaginatedAllStudentsResponse, PaginatedFilteredStudentsResponse,
+  Student
+} from "../interfaces/students";
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 
@@ -28,7 +28,7 @@ export class StudentsController {
   }
 
   @Get(
-    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalary/:canTakeApprenticeship/:monthsOfCommercialExp',
+    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
   )
   filteredStudents(
     @Param('pageNo') pageNo: number,
@@ -39,10 +39,11 @@ export class StudentsController {
     @Param('teamProjectDegree') teamProjectDegree: number,
     @Param('expectedTypeWorkId') expectedTypeWorkId: string,
     @Param('expectedContractTypeId') expectedContractTypeId: string,
-    @Param('expectedSalary') expectedSalary: number,
+    @Param('expectedSalaryMin') expectedSalaryMin: number,
+    @Param('expectedSalaryMax') expectedSalaryMax: number,
     @Param('canTakeApprenticeship') canTakeApprenticeship: number,
     @Param('monthsOfCommercialExp') monthsOfCommercialExp: number,
-  ): Promise<Student[]> {
+  ): Promise<PaginatedFilteredStudentsResponse> {
     return this.studentsService.getFilteredStudents(
       pageNo,
       itemsPerPage,
@@ -52,7 +53,8 @@ export class StudentsController {
       teamProjectDegree,
       expectedTypeWorkId,
       expectedContractTypeId,
-      expectedSalary,
+      expectedSalaryMin,
+      expectedSalaryMax,
       canTakeApprenticeship,
       monthsOfCommercialExp,
     );

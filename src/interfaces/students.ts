@@ -24,3 +24,11 @@ export interface PaginatedAllStudentsResponse {
   itemsPerPage: number;
   currentPage: number;
 }
+
+export interface PaginatedFilteredStudentsResponse {
+  filteredStudents: Student[];
+  totalItems: number;
+  totalPages: number;
+  itemsPerPage: number;
+  currentPage: number;
+}

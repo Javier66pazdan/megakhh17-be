@@ -3,9 +3,9 @@ import { Students } from './students.entity';
 import {
   GetOneStudentResponse,
   PaginatedAllStudentsResponse,
-  Student,
+  PaginatedFilteredStudentsResponse,
 } from '../interfaces/students';
-import { Brackets, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { StudentsDto } from './dto/students.dto';
 import { User } from '../user/user.entity';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
@@ -63,7 +63,7 @@ export class StudentsService {
   }
 
   async getFilteredStudents(
-    pageNo: number,
+    currentPage = 1,
     itemsPerPage: number,
     courseCompletion?: number,
     courseEngagement?: number,
@@ -71,24 +71,13 @@ export class StudentsService {
     teamProjectDegree?: number,
     expectedTypeWorkId?: string,
     expectedContractTypeId?: string,
-    expectedSalary?: number,
+    expectedSalaryMin?: number,
+    expectedSalaryMax?: number,
     canTakeApprenticeship?: number,
     monthsOfCommercialExp?: number,
-  ): Promise<Student[]> {
-
-    return await this.datasource
+  ): Promise<PaginatedFilteredStudentsResponse> {
+    const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
-      // .select([
-      //   'students.courseCompletion',
-      //   'students.courseEngagement',
-      //   'students.projectDegree',
-      //   'students.teamProjectDegree',
-      //   'studentsProfile.expectedSalary',
-      //   'expectedContractType.typeContract',
-      //   'expectedTypeWork.typeWork',
-      //   'studentsProfile.canTakeApprenticeship',
-      //   'studentsProfile.monthsOfCommercialExp',
-      // ])
       .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
       .leftJoinAndSelect(
         'students.expectedContractType',
@@ -112,8 +101,11 @@ export class StudentsService {
       })
       .andWhere('expectedContractType.id = :id', { id: expectedContractTypeId })
 
-      .andWhere('studentsProfile.expectedSalary = :expectedSalary', {
-        expectedSalary,
+      .andWhere('studentsProfile.expectedSalary >= :expectedSalaryMin', {
+        expectedSalaryMin,
+      })
+      .andWhere('studentsProfile.expectedSalary <= :expectedSalaryMax', {
+        expectedSalaryMax,
       })
       .andWhere(
         'studentsProfile.canTakeApprenticeship = :canTakeApprenticeship',
@@ -127,7 +119,64 @@ export class StudentsService {
           monthsOfCommercialExp,
         },
       )
+      .getCount();
+
+    const filteredStudents = await this.datasource
+      .createQueryBuilder(Students, 'students')
+      .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
+      .leftJoinAndSelect(
+        'students.expectedContractType',
+        'expectedContractType',
+      )
+      .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
+      .where('students.courseCompletion = :courseCompletion', {
+        courseCompletion,
+      })
+      .andWhere('students.courseEngagement = :courseEngagement', {
+        courseEngagement,
+      })
+      .andWhere('students.projectDegree = :projectDegree', {
+        projectDegree,
+      })
+      .andWhere('students.teamProjectDegree = :teamProjectDegree', {
+        teamProjectDegree,
+      })
+      .andWhere('expectedTypeWork.id = :id', {
+        id: expectedTypeWorkId,
+      })
+      .andWhere('expectedContractType.id = :id', { id: expectedContractTypeId })
+
+      .andWhere('studentsProfile.expectedSalary >= :expectedSalaryMin', {
+        expectedSalaryMin,
+      })
+      .andWhere('studentsProfile.expectedSalary <= :expectedSalaryMax', {
+        expectedSalaryMax,
+      })
+      .andWhere(
+        'studentsProfile.canTakeApprenticeship = :canTakeApprenticeship',
+        {
+          canTakeApprenticeship,
+        },
+      )
+      .andWhere(
+        'studentsProfile.monthsOfCommercialExp = :monthsOfCommercialExp',
+        {
+          monthsOfCommercialExp,
+        },
+      )
+      .offset(itemsPerPage * (currentPage - 1))
+      .limit(itemsPerPage)
       .getMany();
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    return {
+      filteredStudents,
+      totalItems,
+      totalPages,
+      itemsPerPage,
+      currentPage,
+    };
   }
 
   async getOneStudent(id: string): Promise<GetOneStudentResponse> {
