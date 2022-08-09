@@ -87,12 +87,6 @@ export class StudentsService {
       .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
       .where(`MATCH(firstName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
       .orWhere(`MATCH(lastName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(bio) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(education) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(courses) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(
-        `MATCH(workExperience) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
-      )
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
@@ -109,11 +103,16 @@ export class StudentsService {
       .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
         teamProjectDegree,
       })
-      .andWhere('expectedTypeWork.id = :id', {
-        id: expectedTypeWorkId,
+      .andWhere('expectedTypeWork.id IN(:id)', {
+        id: String(expectedTypeWorkId)
+          .split(',')
+          .map((i) => Number(i)),
       })
-      .andWhere('expectedContractType.id = :id', { id: expectedContractTypeId })
-
+      .andWhere('expectedContractType.id IN(:id)', {
+        id: String(expectedContractTypeId)
+          .split(',')
+          .map((i) => Number(i)),
+      })
       .andWhere('studentsProfile.expectedSalary >= :expectedSalaryMin', {
         expectedSalaryMin,
       })
@@ -144,12 +143,6 @@ export class StudentsService {
       .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
       .where(`MATCH(firstName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
       .orWhere(`MATCH(lastName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(bio) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(education) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(courses) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(
-        `MATCH(workExperience) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
-      )
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
@@ -166,11 +159,16 @@ export class StudentsService {
       .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
         teamProjectDegree,
       })
-      .andWhere('expectedTypeWork.id = :id', {
-        id: expectedTypeWorkId,
+      .andWhere('expectedTypeWork.id IN(:id)', {
+        id: String(expectedTypeWorkId)
+          .split(',')
+          .map((i) => Number(i)),
       })
-      .andWhere('expectedContractType.id = :id', { id: expectedContractTypeId })
-
+      .andWhere('expectedContractType.id IN(:id)', {
+        id: String(expectedContractTypeId)
+          .split(',')
+          .map((i) => Number(i)),
+      })
       .andWhere('studentsProfile.expectedSalary >= :expectedSalaryMin', {
         expectedSalaryMin,
       })
