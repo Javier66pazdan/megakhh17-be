@@ -100,9 +100,9 @@ export class AuthService {
               id: hrData.id,
               // @ts-ignore
               fullName: hrData.fullName,
-              // @ts-ignore
-              company: hrData.company,
-              email: user.email,
+              // // @ts-ignore
+              // company: hrData.company,
+              // email: user.email,
             });
         } else if (userRole === 'student') {
           const studentData = await User.createQueryBuilder('user')
@@ -115,6 +115,8 @@ export class AuthService {
             res.json({ message: 'Nie udało się pobrać danych kursanta.' });
           }
 
+          const fullName = `${studentData.students.studentsProfile.firstName} ${studentData.students.studentsProfile.lastName}`;
+
           return res
             .cookie('jwt', token.accessToken, {
               secure: false,
@@ -124,10 +126,11 @@ export class AuthService {
             .json({
               role: 3,
               id: studentData.students.id,
-              email: studentData.email,
-              contactEmail: studentData.students.studentsProfile.email,
-              firstName: studentData.students.studentsProfile.firstName,
-              lastName: studentData.students.studentsProfile.lastName,
+              // email: studentData.email,
+              // contactEmail: studentData.students.studentsProfile.email,
+              // firstName: studentData.students.studentsProfile.firstName,
+              // lastName: studentData.students.studentsProfile.lastName,
+              fullName,
               githubPhotoUrl:
                 studentData.students.studentsProfile.githubPhotoUrl,
             });
