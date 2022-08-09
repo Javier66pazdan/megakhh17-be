@@ -65,6 +65,7 @@ export class StudentsService {
   async getFilteredStudents(
     currentPage = 1,
     itemsPerPage: number,
+    searchText?: string,
     courseCompletion?: number,
     courseEngagement?: number,
     projectDegree?: number,
@@ -75,7 +76,6 @@ export class StudentsService {
     expectedSalaryMax?: number,
     canTakeApprenticeship?: number,
     monthsOfCommercialExp?: number,
-    searchText?: string,
   ): Promise<PaginatedFilteredStudentsResponse> {
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
@@ -90,6 +90,9 @@ export class StudentsService {
       .orWhere(`MATCH(bio) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
       .orWhere(`MATCH(education) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
       .orWhere(`MATCH(courses) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(
+        `MATCH(workExperience) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
+      )
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
@@ -143,6 +146,9 @@ export class StudentsService {
       .orWhere(`MATCH(bio) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
       .orWhere(`MATCH(education) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
       .orWhere(`MATCH(courses) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(
+        `MATCH(workExperience) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
+      )
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )

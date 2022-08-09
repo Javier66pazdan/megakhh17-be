@@ -28,11 +28,12 @@ export class StudentsController {
   }
 
   @Get(
-    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp/:searchText',
+    '/filter/:pageNo/:itemsPerPage/:searchText/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
   )
   filteredStudents(
     @Param('pageNo') pageNo: number,
     @Param('itemsPerPage') itemsPerPage: number,
+    @Param('searchText') searchText?: string,
     @Param('courseCompletion') courseCompletion?: number,
     @Param('courseEngagement') courseEngagement?: number,
     @Param('projectDegree') projectDegree?: number,
@@ -43,11 +44,11 @@ export class StudentsController {
     @Param('expectedSalaryMax') expectedSalaryMax?: number,
     @Param('canTakeApprenticeship') canTakeApprenticeship?: number,
     @Param('monthsOfCommercialExp') monthsOfCommercialExp?: number,
-    @Param('searchText') searchText?: string,
   ): Promise<PaginatedFilteredStudentsResponse> {
     return this.studentsService.getFilteredStudents(
       pageNo,
       itemsPerPage,
+      searchText,
       courseCompletion,
       courseEngagement,
       projectDegree,
@@ -58,7 +59,6 @@ export class StudentsController {
       expectedSalaryMax,
       canTakeApprenticeship,
       monthsOfCommercialExp,
-      searchText,
     );
   }
 
