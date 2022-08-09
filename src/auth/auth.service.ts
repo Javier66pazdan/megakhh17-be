@@ -73,6 +73,16 @@ export class AuthService {
         const userRole = user.role.type;
 
         if (userRole === 'admin') {
+          return res
+            .cookie('jwt', token.accessToken, {
+              secure: false,
+              domain: 'localhost',
+              httpOnly: true,
+            })
+            .json({
+              email: user.email,
+              role: 1,
+            });
         } else if (userRole === 'hr') {
           const hrData = await this.hrsService.getOneHr(user.id);
           if ('error' in hrData) {
@@ -92,47 +102,40 @@ export class AuthService {
               fullName: hrData.fullName,
               // @ts-ignore
               company: hrData.company,
-              // @ts-ignore
-              userEmail: hrData.userEmail,
+              email: user.email,
             });
         } else if (userRole === 'student') {
+          const studentData = await User.createQueryBuilder('user')
+            .leftJoinAndSelect('user.students', 'students')
+            .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
+            .where('user.id = :id', { id: user.id })
+            .getOne();
+
+          if (!studentData) {
+            res.json({ message: 'Nie udało się pobrać danych kursanta.' });
+          }
+
+          return res
+            .cookie('jwt', token.accessToken, {
+              secure: false,
+              domain: 'localhost',
+              httpOnly: true,
+            })
+            .json({
+              role: 3,
+              id: studentData.students.id,
+              email: studentData.email,
+              contactEmail: studentData.students.studentsProfile.email,
+              firstName: studentData.students.studentsProfile.firstName,
+              lastName: studentData.students.studentsProfile.lastName,
+              githubPhotoUrl:
+                studentData.students.studentsProfile.githubPhotoUrl,
+            });
         }
 
-        // const userData: any = {};
-        // const userId = await this.datasource
-        //   .createQueryBuilder(User, 'user')
-        //   .select([`user.id`, `user.role`])
-        //   .where(`user.id=:id`, { id: user.id })
-        //   .execute();
-        //
-        // userData.id = userId[0].user_id;
-        // userData.role = userId[0].roleId;
-        //
-        // const studentId = await this.datasource
-        //   .createQueryBuilder(Students, 'students')
-        //   .select([`students.id`])
-        //   .where(`students.userId=:id`, { id: user.id })
-        //   .execute();
-        // userData.studentId = studentId[0].students_id;
-        //
-        // const studentProfile = await this.datasource
-        //   .createQueryBuilder(StudentsProfile, `students_profile`)
-        //   .select([`students_profile.firstName`])
-        //   .where(`students_profile.id=:id`, {
-        //     id: userData.studentId,
-        //   })
-        //   .execute();
-        // userData.studentName = studentProfile[0].students_profile_firstName;
-
-        return res
-          .cookie('jwt', token.accessToken, {
-            secure: false,
-            domain: 'localhost',
-            httpOnly: true,
-          })
-          .json({
-            id: user.role,
-          });
+        return res.json({
+          message: 'Niepoprawna rola użytkownika.',
+        });
       } else {
         return res
           .status(400)
