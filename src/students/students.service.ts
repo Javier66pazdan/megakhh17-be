@@ -5,7 +5,7 @@ import {
   PaginatedAllStudentsResponse,
   Student,
 } from '../interfaces/students';
-import { DataSource } from 'typeorm';
+import { Brackets, DataSource } from 'typeorm';
 import { StudentsDto } from './dto/students.dto';
 import { User } from '../user/user.entity';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
@@ -75,16 +75,6 @@ export class StudentsService {
     canTakeApprenticeship?: number,
     monthsOfCommercialExp?: number,
   ): Promise<Student[]> {
-    // return await Students.find({
-    //   relations: { studentsProfile: true },
-    //   where: [
-    //     { courseCompletion },
-    //     { courseEngagement },
-    //     {
-    //       studentsProfile: [{ expectedSalary }],
-    //     },
-    //   ],
-    // });
 
     return await this.datasource
       .createQueryBuilder(Students, 'students')
@@ -99,6 +89,12 @@ export class StudentsService {
       //   'studentsProfile.canTakeApprenticeship',
       //   'studentsProfile.monthsOfCommercialExp',
       // ])
+      .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
+      .leftJoinAndSelect(
+        'students.expectedContractType',
+        'expectedContractType',
+      )
+      .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
       .where('students.courseCompletion = :courseCompletion', {
         courseCompletion,
       })
@@ -111,12 +107,11 @@ export class StudentsService {
       .andWhere('students.teamProjectDegree = :teamProjectDegree', {
         teamProjectDegree,
       })
-      .andWhere('expectedContractType.id = :id', {
-        expectedContractTypeId,
+      .andWhere('expectedTypeWork.id = :id', {
+        id: expectedTypeWorkId,
       })
-      // .andWhere('expectedTypeWork.typeWork = :typeWork', {
-      //   expectedTypeWorkId,
-      // })
+      .andWhere('expectedContractType.id = :id', { id: expectedContractTypeId })
+
       .andWhere('studentsProfile.expectedSalary = :expectedSalary', {
         expectedSalary,
       })
@@ -132,13 +127,7 @@ export class StudentsService {
           monthsOfCommercialExp,
         },
       )
-      .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
-      .leftJoinAndSelect(
-        'students.expectedContractType',
-        'expectedContractType',
-      )
-      .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
-      .execute();
+      .getMany();
   }
 
   async getOneStudent(id: string): Promise<GetOneStudentResponse> {

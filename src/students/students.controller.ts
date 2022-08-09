@@ -28,7 +28,7 @@ export class StudentsController {
   }
 
   @Get(
-    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractType/:expectedSalary/:canTakeApprenticeship/:monthsOfCommercialExp',
+    '/filter/:pageNo/:itemsPerPage/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalary/:canTakeApprenticeship/:monthsOfCommercialExp',
   )
   filteredStudents(
     @Param('pageNo') pageNo: number,
@@ -38,7 +38,7 @@ export class StudentsController {
     @Param('projectDegree') projectDegree: number,
     @Param('teamProjectDegree') teamProjectDegree: number,
     @Param('expectedTypeWorkId') expectedTypeWorkId: string,
-    @Param('expectedContractTypeId') expectedTypeContractId: string,
+    @Param('expectedContractTypeId') expectedContractTypeId: string,
     @Param('expectedSalary') expectedSalary: number,
     @Param('canTakeApprenticeship') canTakeApprenticeship: number,
     @Param('monthsOfCommercialExp') monthsOfCommercialExp: number,
@@ -51,7 +51,7 @@ export class StudentsController {
       projectDegree,
       teamProjectDegree,
       expectedTypeWorkId,
-      expectedTypeContractId,
+      expectedContractTypeId,
       expectedSalary,
       canTakeApprenticeship,
       monthsOfCommercialExp,
