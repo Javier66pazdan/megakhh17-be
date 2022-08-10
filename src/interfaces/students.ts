@@ -34,3 +34,8 @@ export interface PaginatedFilteredStudentsResponse {
   itemsPerPage: number;
   currentPage: number;
 }
+
+export interface GetUpdateStatusResponse {
+  success: boolean;
+  message: string;
+}

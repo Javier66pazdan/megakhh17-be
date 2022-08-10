@@ -2,11 +2,14 @@ import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
   GetOneStudentResponse,
-  PaginatedAllStudentsResponse, PaginatedFilteredStudentsResponse,
-  Student
-} from "../interfaces/students";
+  GetUpdateStatusResponse,
+  PaginatedAllStudentsResponse,
+  PaginatedFilteredStudentsResponse,
+  Student,
+} from '../interfaces/students';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
+import { Status } from './students.entity';
 
 @Controller('students')
 export class StudentsController {
@@ -68,5 +71,13 @@ export class StudentsController {
     @Body() updateStudentProfile: UpdateStudentProfileDto,
   ): Promise<StudentsProfileUpdateResponse> {
     return this.studentsService.update(id, updateStudentProfile);
+  }
+
+  @Patch('/status/:id/:status')
+  updateStatus(
+    @Param('id') id: string,
+    @Param('status') status: Status,
+  ): Promise<GetUpdateStatusResponse> {
+    return this.studentsService.updateStatus(id, status);
   }
 }

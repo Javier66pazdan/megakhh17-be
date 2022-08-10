@@ -1,7 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Students } from './students.entity';
+import { Status, Students } from './students.entity';
 import {
   GetOneStudentResponse,
+  GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
 } from '../interfaces/students';
@@ -391,5 +392,34 @@ export class StudentsService {
         message: `Profil studenta o ID: ${id} został zaktualizowany.`,
       };
     }
+  }
+
+  async updateStatus(
+    id: string,
+    status: Status,
+  ): Promise<GetUpdateStatusResponse> {
+    const findStudent = await Students.findOne({
+      where: {
+        id,
+        status,
+      },
+    });
+    if (!id) {
+      return {
+        success: false,
+        message: `Student o podanym ID: ${id} nie istnieje!`,
+      };
+    } else if (findStudent) {
+      return {
+        success: false,
+        message: `Student o ID: ${id} posiada już podany status!`,
+      };
+    } else {
+      await Students.update(id, { status });
+    }
+    return {
+      success: true,
+      message: `Status studenta o ID: ${id} został zaktualizowany`,
+    };
   }
 }
