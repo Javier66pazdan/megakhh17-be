@@ -61,6 +61,7 @@ export class StudentsProfileService {
     studentProfile.lastName = lastName;
     studentProfile.bio = bio;
     studentProfile.githubUsername = githubUsername;
+    studentProfile.githubPhotoUrl = githubPhotoUrl;
     studentProfile.portfolioUrls = portfolioUrls;
     studentProfile.projectUrls = projectUrls;
     studentProfile.targetWorkCity = targetWorkCity;
