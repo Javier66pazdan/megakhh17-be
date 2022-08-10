@@ -4,13 +4,37 @@ import { UpdateStudentsProfileDto } from './dto/update-students_profile.dto';
 import { StudentsProfile } from './students_profile.entity';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { UpdateStudentProfileDto } from './dto/updateStudentProfileDto';
+import { User } from '../user/user.entity';
+import { Students } from '../students/students.entity';
 
 @Injectable()
 export class StudentsProfileService {
-  async create(newProfile: CreateStudentsProfileDto): Promise<StudentsProfile> {
+  async create(
+    newProfile: CreateStudentsProfileDto,
+  ): Promise<{ message: string }> {
     const studentProfile = new StudentsProfile();
 
-    console.log('cos nie działa');
+    const { registerToken } = newProfile;
+
+    const user = await User.findOne({ where: { registerToken } });
+
+    if (!user) {
+      return {
+        message: 'Użytkownik z podanym tokenem nie istnieje.',
+      };
+    }
+
+    user.registerToken = null;
+    await user.save();
+
+    const userStudent = await User.createQueryBuilder('user')
+      .leftJoinAndSelect('user.students', 'students')
+      .where('user.id = :id', { id: user.id })
+      .getOne();
+
+    const student = await Students.findOne({
+      where: { id: userStudent.students.id },
+    });
 
     const {
       email,
@@ -19,6 +43,7 @@ export class StudentsProfileService {
       lastName,
       bio,
       githubUsername,
+      githubPhotoUrl,
       portfolioUrls,
       projectUrls,
       targetWorkCity,
@@ -46,8 +71,14 @@ export class StudentsProfileService {
     studentProfile.workExperience = workExperience;
     studentProfile.courses = courses;
 
-    await studentProfile.save();
-    return studentProfile;
+    const studentProfileCreated = await studentProfile.save();
+
+    student.studentsProfile = studentProfileCreated;
+    await student.save();
+
+    return {
+      message: 'Profil utworzony.',
+    };
   }
 
   findAll() {
