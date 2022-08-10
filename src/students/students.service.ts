@@ -25,7 +25,9 @@ export class StudentsService {
   ): Promise<PaginatedAllStudentsResponse> {
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
-      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .where('students.status IN (:...studentsStatus)', {
+        studentsStatus: [1, 2],
+      })
       .getCount();
 
     const allStudents = await this.datasource
@@ -45,7 +47,9 @@ export class StudentsService {
         'studentsProfile.workExperience',
         'expectedContractType.typeContract',
       ])
-      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .where('students.status IN (:...studentsStatus)', {
+        studentsStatus: [1, 2],
+      })
       .leftJoin('students.studentsProfile', 'studentsProfile')
       .leftJoin('students.expectedContractType', 'expectedContractType')
       .offset(itemsPerPage * (currentPage - 1))
