@@ -1,8 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Students } from './students.entity';
+import { Status, Students } from './students.entity';
 import {
   GetOneStudentResponse,
+  GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
+  PaginatedFilteredStudentsResponse,
 } from '../interfaces/students';
 import { DataSource } from 'typeorm';
 import { StudentsDto } from './dto/students.dto';
@@ -10,6 +12,8 @@ import { User } from '../user/user.entity';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { StudentsProfile } from '../students_profile/students_profile.entity';
+import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
+import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
 
 @Injectable()
 export class StudentsService {
@@ -17,9 +21,8 @@ export class StudentsService {
 
   async getAllAvailableStudents(
     currentPage = 1,
+    itemsPerPage,
   ): Promise<PaginatedAllStudentsResponse> {
-    const itemsPerPage = 2;
-
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
       .where('students.status = :studentsStatus', { studentsStatus: 3 })
@@ -28,6 +31,7 @@ export class StudentsService {
     const allStudents = await this.datasource
       .createQueryBuilder(Students, 'students')
       .select([
+        'students.id',
         'students.courseCompletion',
         'students.courseEngagement',
         'students.projectDegree',
@@ -39,9 +43,11 @@ export class StudentsService {
         'studentsProfile.canTakeApprenticeship',
         'studentsProfile.monthsOfCommercialExp',
         'studentsProfile.workExperience',
+        'expectedContractType.typeContract',
       ])
       .where('students.status = :studentsStatus', { studentsStatus: 3 })
       .leftJoin('students.studentsProfile', 'studentsProfile')
+      .leftJoin('students.expectedContractType', 'expectedContractType')
       .offset(itemsPerPage * (currentPage - 1))
       .limit(itemsPerPage)
       .execute();
@@ -50,6 +56,146 @@ export class StudentsService {
 
     return {
       allStudents,
+      totalItems,
+      totalPages,
+      itemsPerPage,
+      currentPage,
+    };
+  }
+
+  async getFilteredStudents(
+    currentPage = 1,
+    itemsPerPage: number,
+    searchText?: string,
+    courseCompletion?: number,
+    courseEngagement?: number,
+    projectDegree?: number,
+    teamProjectDegree?: number,
+    expectedTypeWorkId?: string,
+    expectedContractTypeId?: string,
+    expectedSalaryMin?: number,
+    expectedSalaryMax?: number,
+    canTakeApprenticeship?: number,
+    monthsOfCommercialExp?: number,
+  ): Promise<PaginatedFilteredStudentsResponse> {
+    const totalItems = await this.datasource
+      .createQueryBuilder(Students, 'students')
+      .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
+      .leftJoinAndSelect(
+        'students.expectedContractType',
+        'expectedContractType',
+      )
+      .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
+      .where(`MATCH(firstName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(lastName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(
+        `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
+      )
+      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .andWhere('students.courseCompletion >= :courseCompletion', {
+        courseCompletion,
+      })
+      .andWhere('students.courseEngagement >= :courseEngagement', {
+        courseEngagement,
+      })
+      .andWhere('students.projectDegree >= :projectDegree', {
+        projectDegree,
+      })
+      .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
+        teamProjectDegree,
+      })
+      .andWhere('expectedTypeWork.id IN(:ids)', {
+        ids: String(expectedTypeWorkId)
+          .split(',')
+          .map((i) => Number(i)),
+      })
+      .andWhere('expectedContractType.id IN(:id)', {
+        id: String(expectedContractTypeId)
+          .split(',')
+          .map((i) => Number(i)),
+      })
+      .andWhere('studentsProfile.expectedSalary >= :expectedSalaryMin', {
+        expectedSalaryMin,
+      })
+      .andWhere('studentsProfile.expectedSalary <= :expectedSalaryMax', {
+        expectedSalaryMax,
+      })
+      .andWhere(
+        'studentsProfile.canTakeApprenticeship = :canTakeApprenticeship',
+        {
+          canTakeApprenticeship,
+        },
+      )
+      .andWhere(
+        'studentsProfile.monthsOfCommercialExp >= :monthsOfCommercialExp',
+        {
+          monthsOfCommercialExp,
+        },
+      )
+      .getCount();
+
+    const filteredStudents = await this.datasource
+      .createQueryBuilder(Students, 'students')
+      .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
+      .leftJoinAndSelect(
+        'students.expectedContractType',
+        'expectedContractType',
+      )
+      .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
+      .where(`MATCH(firstName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(`MATCH(lastName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
+      .orWhere(
+        `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
+      )
+      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .andWhere('students.courseCompletion >= :courseCompletion', {
+        courseCompletion,
+      })
+      .andWhere('students.courseEngagement >= :courseEngagement', {
+        courseEngagement,
+      })
+      .andWhere('students.projectDegree >= :projectDegree', {
+        projectDegree,
+      })
+      .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
+        teamProjectDegree,
+      })
+      .andWhere('expectedTypeWork.id IN(:ids)', {
+        ids: String(expectedTypeWorkId)
+          .split(',')
+          .map((i) => Number(i)),
+      })
+      .andWhere('expectedContractType.id IN(:id)', {
+        id: String(expectedContractTypeId)
+          .split(',')
+          .map((i) => Number(i)),
+      })
+      .andWhere('studentsProfile.expectedSalary >= :expectedSalaryMin', {
+        expectedSalaryMin,
+      })
+      .andWhere('studentsProfile.expectedSalary <= :expectedSalaryMax', {
+        expectedSalaryMax,
+      })
+      .andWhere(
+        'studentsProfile.canTakeApprenticeship = :canTakeApprenticeship',
+        {
+          canTakeApprenticeship,
+        },
+      )
+      .andWhere(
+        'studentsProfile.monthsOfCommercialExp >= :monthsOfCommercialExp',
+        {
+          monthsOfCommercialExp,
+        },
+      )
+      .offset(itemsPerPage * (currentPage - 1))
+      .limit(itemsPerPage)
+      .getMany();
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    return {
+      filteredStudents,
       totalItems,
       totalPages,
       itemsPerPage,
@@ -117,22 +263,40 @@ export class StudentsService {
     const findStudent = await Students.findOne({
       relations: {
         expectedContractType: true,
+        expectedTypeWork: true,
       },
       where: {
         id,
       },
     });
-    console.log(findStudent);
     if (!findStudent) {
       return {
         success: false,
         message: `Student o podanym ID: ${id} nie istnieje!`,
       };
     }
+
+    if (findStudent.expectedContractType === null) {
+      const studentTypeContract = new ExpectedContractType();
+      studentTypeContract.id = updateStudentProfile.expectedContractType;
+
+      findStudent.expectedContractType = studentTypeContract;
+
+      await Students.save(findStudent);
+    }
+
+    if (findStudent.expectedTypeWork === null) {
+      const studentTypeWork = new ExpectedTypeWork();
+      studentTypeWork.id = updateStudentProfile.expectedTypeWork;
+
+      findStudent.expectedTypeWork = studentTypeWork;
+
+      await Students.save(findStudent);
+    }
+
     const findProfile = await Students.findOne({
       relations: {
         studentsProfile: true,
-        expectedContractType: true,
       },
       where: {
         id,
@@ -156,11 +320,9 @@ export class StudentsService {
         education,
         workExperience,
         courses,
-        expectedContractType,
       } = updateStudentProfile;
 
       findStudent.bonusProjectUrls = bonusProjectUrls;
-      // findStudent.expectedContractType[] = expectedContractType[1];
 
       studentNewProfile.email = email;
       studentNewProfile.tel = tel;
@@ -201,9 +363,12 @@ export class StudentsService {
         workExperience,
         courses,
         expectedContractType,
+        expectedTypeWork,
       } = updateStudentProfile;
 
       findStudent.bonusProjectUrls = bonusProjectUrls;
+      findStudent.expectedContractType.id = expectedContractType;
+      findStudent.expectedTypeWork.id = expectedTypeWork;
 
       findProfile.studentsProfile.email = email;
       findProfile.studentsProfile.tel = tel;
@@ -227,5 +392,34 @@ export class StudentsService {
         message: `Profil studenta o ID: ${id} został zaktualizowany.`,
       };
     }
+  }
+
+  async updateStatus(
+    id: string,
+    status: Status,
+  ): Promise<GetUpdateStatusResponse> {
+    const findStudent = await Students.findOne({
+      where: {
+        id,
+        status,
+      },
+    });
+    if (!id) {
+      return {
+        success: false,
+        message: `Student o podanym ID: ${id} nie istnieje!`,
+      };
+    } else if (findStudent) {
+      return {
+        success: false,
+        message: `Student o ID: ${id} posiada już podany status!`,
+      };
+    } else {
+      await Students.update(id, { status });
+    }
+    return {
+      success: true,
+      message: `Status studenta o ID: ${id} został zaktualizowany`,
+    };
   }
 }

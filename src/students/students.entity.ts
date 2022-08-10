@@ -4,6 +4,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -12,6 +13,12 @@ import { StudentsHrs } from '../students_hrs/students_hrs.entity';
 import { StudentsProfile } from '../students_profile/students_profile.entity';
 import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
+
+export enum Status {
+  AVAILABLE = 1,
+  RESERVED,
+  HIRED,
+}
 
 @Entity()
 export class Students extends BaseEntity {
@@ -45,9 +52,11 @@ export class Students extends BaseEntity {
   bonusProjectUrls: string;
 
   @Column({
-    default: 0,
+    type: 'enum',
+    enum: Status,
+    default: Status.AVAILABLE,
   })
-  status: number;
+  status: Status;
 
   @Column({
     default: () => 'CURRENT_TIMESTAMP',
@@ -58,9 +67,8 @@ export class Students extends BaseEntity {
   @JoinColumn()
   user: User;
 
-  @OneToOne((type) => StudentsHrs, (entity) => entity.students)
-  // @JoinColumn()
-  studentsHrs: StudentsHrs;
+  @OneToMany((type) => StudentsHrs, (entity) => entity.students)
+  studentsHrs: StudentsHrs[];
 
   @OneToOne((type) => StudentsProfile, (entity) => entity.students, {
     cascade: true,
@@ -68,13 +76,11 @@ export class Students extends BaseEntity {
   @JoinColumn()
   studentsProfile: StudentsProfile;
 
-  @ManyToOne((type) => ExpectedTypeWork, (entity) => entity.id)
+  @ManyToOne((type) => ExpectedTypeWork, (entity) => entity.students)
   @JoinColumn()
-  expectedTypeWork: ExpectedTypeWork[];
+  expectedTypeWork: ExpectedTypeWork;
 
-  @ManyToOne((type) => ExpectedContractType, (entity) => entity.id, {
-    cascade: true,
-  })
+  @ManyToOne((type) => ExpectedContractType, (entity) => entity.students)
   @JoinColumn()
-  expectedContractType: ExpectedContractType[];
+  expectedContractType: ExpectedContractType;
 }

@@ -31,10 +31,14 @@ export class StudentsHrsService {
     const findStudentHr = await StudentsHrs.findOne({
       relations: {
         students: true,
+        hrs: true,
       },
       where: {
         students: {
           id: studentId,
+        },
+        hrs: {
+          id: hrId,
         },
       },
     });
@@ -61,8 +65,10 @@ export class StudentsHrsService {
 
       studentHr.hrs = hr;
       studentHr.students = student;
-
       await studentHr.save();
+
+      student.status = 2;
+      await student.save();
 
       return {
         success: true,
@@ -74,9 +80,8 @@ export class StudentsHrsService {
   async getHrStudents(
     id: string,
     currentPage = 1,
+    itemsPerPage,
   ): Promise<PaginatedHrAndStudentsResponse> {
-    const itemsPerPage = 2;
-
     const totalItems = await this.dataSource
       .createQueryBuilder(StudentsHrs, 'studentsHrs')
       .where('studentsHrs.hrsId = :studentsHrsHrsId', { studentsHrsHrsId: id })

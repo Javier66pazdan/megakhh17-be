@@ -16,4 +16,5 @@ export class UpdateStudentProfileDto {
   courses: string;
   bonusProjectUrls: string;
   expectedContractType: string;
+  expectedTypeWork: string;
 }

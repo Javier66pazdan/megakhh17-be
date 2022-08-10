@@ -26,12 +26,13 @@ export class StudentsHrsController {
     return this.studentsHrsService.create(createStudentsHrDto);
   }
 
-  @Get('/students/:id/:pageNo')
+  @Get('/students/:id/:pageNo/:itemsPerPage')
   hrStudents(
     @Param('id') id: string,
     @Param('pageNo') pageNo: number,
+    @Param('itemsPerPage') itemsPerPage: number,
   ): Promise<PaginatedHrAndStudentsResponse> {
-    return this.studentsHrsService.getHrStudents(id, pageNo);
+    return this.studentsHrsService.getHrStudents(id, pageNo, itemsPerPage);
   }
 
   @Patch(':id')
