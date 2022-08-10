@@ -15,7 +15,8 @@ import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entit
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
 
 export enum Status {
-  AVAILABLE = 1,
+  NOT_ACTIVE,
+  AVAILABLE,
   RESERVED,
   HIRED,
 }
@@ -54,7 +55,7 @@ export class Students extends BaseEntity {
   @Column({
     type: 'enum',
     enum: Status,
-    default: Status.AVAILABLE,
+    default: Status.NOT_ACTIVE,
   })
   status: Status;
 
