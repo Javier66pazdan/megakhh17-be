@@ -1,10 +1,12 @@
 export class CreateStudentsProfileDto {
+  registerToken: string;
   email: string;
   tel: string;
   firstName: string;
   lastName: string;
   bio: string;
   githubUsername: string;
+  githubPhotoUrl: string;
   portfolioUrls: string;
   projectUrls: string;
   targetWorkCity: string;
