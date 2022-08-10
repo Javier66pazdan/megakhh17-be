@@ -28,7 +28,7 @@ export class StudentsController {
   }
 
   @Get(
-    '/filter/:pageNo/:itemsPerPage/:searchText/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWork/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
+    '/filter/:pageNo/:itemsPerPage/:searchText/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWorkId/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
   )
   filteredStudents(
     @Param('pageNo') pageNo: number,

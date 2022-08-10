@@ -1,3 +1,5 @@
+import { Status } from '../students/students.entity';
+
 export interface Student {
   id: string;
   courseCompletion: number;
@@ -5,7 +7,7 @@ export interface Student {
   projectDegree: number;
   teamProjectDegree: number;
   bonusProjectUrls: string;
-  status: number;
+  status: Status;
 }
 
 export type GetOneStudentResponse =

@@ -103,8 +103,8 @@ export class StudentsService {
       .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
         teamProjectDegree,
       })
-      .andWhere('expectedTypeWork.id IN(:id)', {
-        id: String(expectedTypeWorkId)
+      .andWhere('expectedTypeWork.id IN(:ids)', {
+        ids: String(expectedTypeWorkId)
           .split(',')
           .map((i) => Number(i)),
       })
@@ -159,8 +159,8 @@ export class StudentsService {
       .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
         teamProjectDegree,
       })
-      .andWhere('expectedTypeWork.id IN(:id)', {
-        id: String(expectedTypeWorkId)
+      .andWhere('expectedTypeWork.id IN(:ids)', {
+        ids: String(expectedTypeWorkId)
           .split(',')
           .map((i) => Number(i)),
       })
