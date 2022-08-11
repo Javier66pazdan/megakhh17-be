@@ -11,6 +11,7 @@ import { StudentsHrsService } from './students_hrs.service';
 import { CreateStudentsHrDto } from './dto/create-students_hr.dto';
 import { UpdateStudentsHrDto } from './dto/update-students_hr.dto';
 import {
+  HrRemoveStudentResponse,
   PaginatedHrAndStudentsResponse,
   StudentsHrsResponse,
 } from '../interfaces/students_hrs';
@@ -43,8 +44,11 @@ export class StudentsHrsController {
     return this.studentsHrsService.update(+id, updateStudentsHrDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.studentsHrsService.remove(+id);
+  @Delete('/:studentId/:hrId')
+  remove(
+    @Param('studentId') studentId: string,
+    @Param('hrId') hrId: string,
+  ): Promise<HrRemoveStudentResponse> {
+    return this.studentsHrsService.removeHrStudent(studentId, hrId);
   }
 }

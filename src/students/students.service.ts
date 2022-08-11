@@ -95,7 +95,9 @@ export class StudentsService {
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
-      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .where('students.status IN (:...studentsStatus)', {
+        studentsStatus: [1, 2],
+      })
       .andWhere('students.courseCompletion >= :courseCompletion', {
         courseCompletion,
       })
@@ -151,7 +153,9 @@ export class StudentsService {
       .orWhere(
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
-      .where('students.status = :studentsStatus', { studentsStatus: 3 })
+      .where('students.status IN (:...studentsStatus)', {
+        studentsStatus: [1, 2],
+      })
       .andWhere('students.courseCompletion >= :courseCompletion', {
         courseCompletion,
       })
