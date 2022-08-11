@@ -16,4 +16,6 @@ export class CreateStudentsProfileDto {
   education: string;
   workExperience: string;
   courses: string;
+  expectedContractType: string;
+  expectedTypeWork: string;
 }

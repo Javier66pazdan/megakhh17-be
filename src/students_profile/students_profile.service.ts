@@ -1,9 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateStudentsProfileDto } from './dto/create-students_profile.dto';
-import { UpdateStudentsProfileDto } from './dto/update-students_profile.dto';
 import { StudentsProfile } from './students_profile.entity';
-import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
-import { UpdateStudentProfileDto } from './dto/updateStudentProfileDto';
 import { User } from '../user/user.entity';
 import { Students } from '../students/students.entity';
 
@@ -53,6 +50,8 @@ export class StudentsProfileService {
       education,
       workExperience,
       courses,
+      expectedContractType,
+      expectedTypeWork,
     } = newProfile;
 
     studentProfile.email = email;
@@ -76,6 +75,8 @@ export class StudentsProfileService {
 
     student.studentsProfile = studentProfileCreated;
     await student.save();
+
+    await Students.update(userStudent.students.id, { status: 1 });
 
     return {
       message: 'Profil utworzony.',
