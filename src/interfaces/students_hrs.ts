@@ -8,6 +8,11 @@ export interface StudentsHrsResponse {
   message: string;
 }
 
+export interface HrRemoveStudentResponse {
+  success: boolean;
+  message: string;
+}
+
 export type PaginatedHrAndStudentsResponse =
   | {
       students: StudentsHrs[];

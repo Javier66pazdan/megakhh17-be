@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateStudentsHrDto } from './dto/create-students_hr.dto';
 import { UpdateStudentsHrDto } from './dto/update-students_hr.dto';
 import {
+  HrRemoveStudentResponse,
   PaginatedHrAndStudentsResponse,
   StudentsHrsResponse,
 } from '../interfaces/students_hrs';
@@ -162,7 +163,40 @@ export class StudentsHrsService {
     return `This action updates a #${id} studentsHr`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} studentsHr`;
+  async removeHrStudent(
+    studentId: string,
+    hrId: string,
+  ): Promise<HrRemoveStudentResponse> {
+    const findStudent = await StudentsHrs.findOne({
+      relations: {
+        students: true,
+      },
+      where: {
+        students: {
+          id: studentId,
+        },
+      },
+    });
+
+    if (!findStudent) {
+      return {
+        success: false,
+        message: `Student o podanym ID: ${studentId} nie istnieje na liście zarezerwowanych do rozmowy!`,
+      };
+    }
+    await this.dataSource
+      .createQueryBuilder(StudentsHrs, 'studentsHrs')
+      .leftJoin('studentsHrs.students', 'students')
+      .leftJoin('studentsHrs.hrs', 'hrs')
+      .delete()
+      .from(StudentsHrs)
+      .where('students.id = :studentsId', { studentsId: studentId })
+      .andWhere('hrs.id = :hrsId', { hrsId: hrId })
+      .execute();
+
+    return {
+      success: true,
+      message: `Student o ID: ${studentId} został usunięty z listy studentów do rozmowy`,
+    };
   }
 }
