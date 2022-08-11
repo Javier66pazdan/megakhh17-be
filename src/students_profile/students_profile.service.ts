@@ -3,6 +3,8 @@ import { CreateStudentsProfileDto } from './dto/create-students_profile.dto';
 import { StudentsProfile } from './students_profile.entity';
 import { User } from '../user/user.entity';
 import { Students } from '../students/students.entity';
+import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
+import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
 
 @Injectable()
 export class StudentsProfileService {
@@ -30,8 +32,19 @@ export class StudentsProfileService {
       .getOne();
 
     const student = await Students.findOne({
+      relations: { expectedContractType: true, expectedTypeWork: true },
       where: { id: userStudent.students.id },
     });
+
+    const studentTypeContract = new ExpectedContractType();
+    studentTypeContract.id = newProfile.expectedContractType;
+    student.expectedContractType = studentTypeContract;
+
+    const studentTypeWork = new ExpectedTypeWork();
+    studentTypeWork.id = newProfile.expectedTypeWork;
+    student.expectedTypeWork = studentTypeWork;
+
+    await Students.save(student);
 
     const {
       email,
@@ -50,8 +63,6 @@ export class StudentsProfileService {
       education,
       workExperience,
       courses,
-      expectedContractType,
-      expectedTypeWork,
     } = newProfile;
 
     studentProfile.email = email;
@@ -90,32 +101,6 @@ export class StudentsProfileService {
   findOne(id: number) {
     return `This action returns a #${id} studentsProfile`;
   }
-
-  // async update(
-  //   id: string,
-  //   updateProfile: UpdateStudentProfileDto,
-  // ): Promise<StudentsProfileUpdateResponse> {
-  //   const profileToUpdate = await StudentsProfile.findOne({
-  //     relations: {
-  //       students: true,
-  //     },
-  //     where: {
-  //       students: { id },
-  //     },
-  //   });
-  //   if (!profileToUpdate) {
-  //     return {
-  //       success: false,
-  //       message: `Student o podanym ID: ${id} nie istnieje!`,
-  //     };
-  //   } else {
-  //     await StudentsProfile.update(id, updateProfile);
-  //   }
-  //   return {
-  //     success: true,
-  //     message: `Profil studenta o podanym ID: ${id} został zaktualizowany.`,
-  //   };
-  // }
 
   remove(id: number) {
     return `This action removes a #${id} studentsProfile`;
