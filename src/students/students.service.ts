@@ -46,12 +46,14 @@ export class StudentsService {
         'studentsProfile.monthsOfCommercialExp',
         'studentsProfile.workExperience',
         'expectedContractType.typeContract',
+        'expectedTypeWork.typeWork',
       ])
       .where('students.status IN (:...studentsStatus)', {
         studentsStatus: [1, 2],
       })
       .leftJoin('students.studentsProfile', 'studentsProfile')
       .leftJoin('students.expectedContractType', 'expectedContractType')
+      .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
       .offset(itemsPerPage * (currentPage - 1))
       .limit(itemsPerPage)
       .execute();
@@ -65,6 +67,40 @@ export class StudentsService {
       itemsPerPage,
       currentPage,
     };
+  }
+
+  async getOneStudent(id: string): Promise<GetOneStudentResponse> {
+    const findStudent = await Students.findOne({ where: { id } });
+
+    if (!findStudent) {
+      return {
+        success: false,
+        message: `Student o podanym ID: ${id} nie istnieje`,
+      };
+    } else {
+      return await this.datasource
+        .createQueryBuilder(Students, 'students')
+        .where('students.id = :studentsId', { studentsId: id })
+        .select([
+          'students.courseCompletion',
+          'students.courseEngagement',
+          'students.projectDegree',
+          'students.teamProjectDegree',
+          'studentsProfile.firstName',
+          'studentsProfile.lastName',
+          'studentsProfile.targetWorkCity',
+          'studentsProfile.expectedSalary',
+          'studentsProfile.canTakeApprenticeship',
+          'studentsProfile.monthsOfCommercialExp',
+          'studentsProfile.workExperience',
+          'expectedContractType.typeContract',
+          'expectedTypeWork.typeWork',
+        ])
+        .leftJoin('students.studentsProfile', 'studentsProfile')
+        .leftJoin('students.expectedContractType', 'expectedContractType')
+        .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
+        .execute();
+    }
   }
 
   async getFilteredStudents(
@@ -209,36 +245,6 @@ export class StudentsService {
       itemsPerPage,
       currentPage,
     };
-  }
-
-  async getOneStudent(id: string): Promise<GetOneStudentResponse> {
-    const findStudent = await Students.findOne({ where: { id } });
-
-    if (!findStudent) {
-      return {
-        success: false,
-        message: `Student o podanym ID: ${id} nie istnieje`,
-      };
-    } else {
-      return await this.datasource
-        .createQueryBuilder(Students, 'students')
-        .where('students.id = :studentsId', { studentsId: id })
-        .select([
-          'students.courseCompletion',
-          'students.courseEngagement',
-          'students.projectDegree',
-          'students.teamProjectDegree',
-          'studentsProfile.firstName',
-          'studentsProfile.lastName',
-          'studentsProfile.targetWorkCity',
-          'studentsProfile.expectedSalary',
-          'studentsProfile.canTakeApprenticeship',
-          'studentsProfile.monthsOfCommercialExp',
-          'studentsProfile.workExperience',
-        ])
-        .leftJoin('students.studentsProfile', 'studentsProfile')
-        .execute();
-    }
   }
 
   async addStudent(newStudent: StudentsDto) {

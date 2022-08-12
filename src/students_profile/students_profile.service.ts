@@ -32,7 +32,7 @@ export class StudentsProfileService {
       .getOne();
 
     const student = await Students.findOne({
-      relations: { expectedContractType: true, expectedTypeWork: true },
+      relations: { expectedTypeWork: true, expectedContractType: true },
       where: { id: userStudent.students.id },
     });
 
