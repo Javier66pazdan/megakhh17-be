@@ -8,6 +8,11 @@ import {
 } from 'typeorm';
 import { Students } from '../students/students.entity';
 
+export enum Apprenticeship {
+  YES = 'Tak',
+  NO = 'Nie',
+}
+
 @Entity()
 export class StudentsProfile extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
@@ -78,9 +83,11 @@ export class StudentsProfile extends BaseEntity {
   //W dokumentacji jest literówka: exprctedSalary
 
   @Column({
-    default: 0,
+    type: 'enum',
+    enum: Apprenticeship,
+    default: Apprenticeship.NO,
   })
-  canTakeApprenticeship: number;
+  canTakeApprenticeship: Apprenticeship;
 
   @Column({
     default: 0,

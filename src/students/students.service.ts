@@ -11,7 +11,10 @@ import { StudentsDto } from './dto/students.dto';
 import { User } from '../user/user.entity';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
-import { StudentsProfile } from '../students_profile/students_profile.entity';
+import {
+  Apprenticeship,
+  StudentsProfile,
+} from '../students_profile/students_profile.entity';
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
 import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
 
@@ -56,7 +59,7 @@ export class StudentsService {
       .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
       .offset(itemsPerPage * (currentPage - 1))
       .limit(itemsPerPage)
-      .execute();
+      .getMany();
 
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
@@ -99,6 +102,31 @@ export class StudentsService {
         .leftJoin('students.studentsProfile', 'studentsProfile')
         .leftJoin('students.expectedContractType', 'expectedContractType')
         .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
+        .getOne();
+    }
+  }
+
+  async getOneStudentAndProfile(id: string) {
+    const findStudent = await Students.findOne({ where: { id } });
+
+    if (!findStudent) {
+      return {
+        success: false,
+        message: `Student o podanym ID: ${id} nie istnieje`,
+      };
+    } else {
+      return await this.datasource
+        .createQueryBuilder(Students, 'students')
+        .where('students.id = :studentsId', { studentsId: id })
+        .select([
+          'students.*',
+          'studentsProfile.*',
+          'expectedContractType.*',
+          'expectedTypeWork.*',
+        ])
+        .leftJoin('students.studentsProfile', 'studentsProfile')
+        .leftJoin('students.expectedContractType', 'expectedContractType')
+        .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
         .execute();
     }
   }
@@ -115,7 +143,7 @@ export class StudentsService {
     expectedContractTypeId?: string,
     expectedSalaryMin?: number,
     expectedSalaryMax?: number,
-    canTakeApprenticeship?: number,
+    canTakeApprenticeship?: Apprenticeship,
     monthsOfCommercialExp?: number,
   ): Promise<PaginatedFilteredStudentsResponse> {
     const totalItems = await this.datasource

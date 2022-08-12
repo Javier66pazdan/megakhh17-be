@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
 } from '@nestjs/common';
@@ -31,7 +30,6 @@ export class StudentsProfileController {
   findOne(@Param('id') id: string) {
     return this.studentsProfileService.findOne(+id);
   }
-
 
   @Delete(':id')
   remove(@Param('id') id: string) {

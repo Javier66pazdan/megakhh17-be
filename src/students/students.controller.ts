@@ -5,11 +5,11 @@ import {
   GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
-  Student,
 } from '../interfaces/students';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { Status } from './students.entity';
+import { Apprenticeship } from '../students_profile/students_profile.entity';
 
 @Controller('students')
 export class StudentsController {
@@ -22,12 +22,20 @@ export class StudentsController {
     return this.studentsService.getOneStudent(id);
   }
 
+  @Get('/profile/:id')
+  oneStudentAndProfile(@Param('id') id: string): Promise<GetOneStudentResponse> {
+    return this.studentsService.getOneStudentAndProfile(id);
+  }
+
   @Get('/all/:pageNo/:itemsPerPage')
   allAvailableStudents(
     @Param('pageNo') pageNo: number,
     @Param('itemsPerPage') itemsPerPage: number,
   ): Promise<PaginatedAllStudentsResponse> {
-    return this.studentsService.getAllAvailableStudents(pageNo, itemsPerPage);
+    return this.studentsService.getAllAvailableStudents(
+      Number(pageNo),
+      Number(itemsPerPage),
+    );
   }
 
   @Get(
@@ -45,12 +53,12 @@ export class StudentsController {
     @Param('expectedContractTypeId') expectedContractTypeId?: string,
     @Param('expectedSalaryMin') expectedSalaryMin?: number,
     @Param('expectedSalaryMax') expectedSalaryMax?: number,
-    @Param('canTakeApprenticeship') canTakeApprenticeship?: number,
+    @Param('canTakeApprenticeship') canTakeApprenticeship?: Apprenticeship,
     @Param('monthsOfCommercialExp') monthsOfCommercialExp?: number,
   ): Promise<PaginatedFilteredStudentsResponse> {
     return this.studentsService.getFilteredStudents(
-      pageNo,
-      itemsPerPage,
+      Number(pageNo),
+      Number(itemsPerPage),
       searchText,
       courseCompletion,
       courseEngagement,
