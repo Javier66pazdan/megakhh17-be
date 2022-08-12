@@ -32,50 +32,43 @@ export class StudentsHrsService {
       .where('studentsHrs.hrsId = :studentsHrsHrsId', { studentsHrsHrsId: id })
       .getCount();
 
-    if (!totalItems) {
-      return {
-        success: false,
-        message: `HR o podanym ID: ${id} nie ma przypisanych studentów lub nie istnieje!`,
-      };
-    } else {
-      const students = await this.dataSource
-        .createQueryBuilder(StudentsHrs, 'studentsHrs')
-        .select([
-          'studentsHrs.createdAt',
-          'studentsProfile.firstName',
-          'studentsProfile.lastName',
-          'students.courseCompletion',
-          'students.courseEngagement',
-          'students.projectDegree',
-          'students.teamProjectDegree',
-          'expectedContractType.typeContract',
-          'studentsProfile.targetWorkCity',
-          'studentsProfile.expectedSalary',
-          'studentsProfile.canTakeApprenticeship',
-          'studentsProfile.monthsOfCommercialExp',
-          'studentsProfile.githubUsername',
-          'studentsProfile.githubPhotoUrl',
-        ])
-        .where('studentsHrs.hrsId = :studentsHrsHrsId', {
-          studentsHrsHrsId: id,
-        })
-        .leftJoin('studentsHrs.students', 'students')
-        .leftJoin('students.studentsProfile', 'studentsProfile')
-        .leftJoin('students.expectedContractType', 'expectedContractType')
-        .offset(itemsPerPage * (currentPage - 1))
-        .limit(itemsPerPage)
-        .execute();
+    const students = await this.dataSource
+      .createQueryBuilder(StudentsHrs, 'studentsHrs')
+      .select([
+        'studentsHrs.createdAt',
+        'studentsProfile.firstName',
+        'studentsProfile.lastName',
+        'students.courseCompletion',
+        'students.courseEngagement',
+        'students.projectDegree',
+        'students.teamProjectDegree',
+        'expectedContractType.typeContract',
+        'studentsProfile.targetWorkCity',
+        'studentsProfile.expectedSalary',
+        'studentsProfile.canTakeApprenticeship',
+        'studentsProfile.monthsOfCommercialExp',
+        'studentsProfile.githubUsername',
+        'studentsProfile.githubPhotoUrl',
+      ])
+      .where('studentsHrs.hrsId = :studentsHrsHrsId', {
+        studentsHrsHrsId: id,
+      })
+      .leftJoin('studentsHrs.students', 'students')
+      .leftJoin('students.studentsProfile', 'studentsProfile')
+      .leftJoin('students.expectedContractType', 'expectedContractType')
+      .offset(itemsPerPage * (currentPage - 1))
+      .limit(itemsPerPage)
+      .execute();
 
-      const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-      return {
-        students,
-        totalItems,
-        totalPages,
-        itemsPerPage,
-        currentPage,
-      };
-    }
+    return {
+      students,
+      totalItems,
+      totalPages,
+      itemsPerPage,
+      currentPage,
+    };
   }
 
   async create(

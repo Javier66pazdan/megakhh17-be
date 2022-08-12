@@ -1,3 +1,5 @@
+import { Apprenticeship } from '../students_profile.entity';
+
 export class UpdateStudentProfileDto {
   email: string;
   tel: string;
@@ -9,7 +11,7 @@ export class UpdateStudentProfileDto {
   projectUrls: string;
   targetWorkCity: string;
   expectedSalary: number;
-  canTakeApprenticeship: number;
+  canTakeApprenticeship: Apprenticeship;
   monthsOfCommercialExp: number;
   education: string;
   workExperience: string;

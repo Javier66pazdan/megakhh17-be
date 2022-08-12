@@ -33,7 +33,11 @@ export class StudentsHrsController {
     @Param('pageNo') pageNo: number,
     @Param('itemsPerPage') itemsPerPage: number,
   ): Promise<PaginatedHrAndStudentsResponse> {
-    return this.studentsHrsService.getHrStudents(id, pageNo, itemsPerPage);
+    return this.studentsHrsService.getHrStudents(
+      id,
+      Number(pageNo),
+      Number(itemsPerPage),
+    );
   }
 
   @Patch(':id')
