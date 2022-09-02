@@ -81,6 +81,6 @@ export class HrsService {
   }
 
   async getAllHrs() {
-    return await Hrs.find();
+    return Hrs.find();
   }
 }

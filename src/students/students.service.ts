@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Status, Students } from './students.entity';
+import { Students } from './students.entity';
 import {
   GetOneStudentResponse,
   GetUpdateStatusResponse,
@@ -11,10 +11,9 @@ import { StudentsDto } from './dto/students.dto';
 import { User } from '../user/user.entity';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
-import {
-  Apprenticeship,
-  StudentsProfile,
-} from '../students_profile/students_profile.entity';
+import { StudentsProfile } from '../students_profile/students_profile.entity';
+import { Apprenticeship } from '../interfaces/students';
+import { Status } from '../interfaces/students';
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
 import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
 

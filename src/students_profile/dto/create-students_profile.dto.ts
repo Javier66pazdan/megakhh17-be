@@ -1,4 +1,4 @@
-import { Apprenticeship } from '../students_profile.entity';
+import { Apprenticeship } from '../../interfaces/students';
 
 export class CreateStudentsProfileDto {
   registerToken: string;

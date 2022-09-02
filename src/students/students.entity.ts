@@ -13,13 +13,7 @@ import { StudentsHrs } from '../students_hrs/students_hrs.entity';
 import { StudentsProfile } from '../students_profile/students_profile.entity';
 import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
-
-export enum Status {
-  NOT_ACTIVE,
-  AVAILABLE,
-  RESERVED,
-  HIRED,
-}
+import { Status } from '../interfaces/students';
 
 @Entity()
 export class Students extends BaseEntity {

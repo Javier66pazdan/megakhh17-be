@@ -1,4 +1,14 @@
-import { Status } from '../students/students.entity';
+export enum Apprenticeship {
+  YES = 'Tak',
+  NO = 'Nie',
+}
+
+export enum Status {
+  NOT_ACTIVE,
+  AVAILABLE,
+  RESERVED,
+  HIRED,
+}
 
 export interface Student {
   id: string;

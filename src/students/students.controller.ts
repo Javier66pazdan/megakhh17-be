@@ -8,8 +8,8 @@ import {
 } from '../interfaces/students';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
-import { Status } from './students.entity';
-import { Apprenticeship } from '../students_profile/students_profile.entity';
+import { Status } from '../interfaces/students';
+import { Apprenticeship } from '../interfaces/students';
 
 @Controller('students')
 export class StudentsController {
