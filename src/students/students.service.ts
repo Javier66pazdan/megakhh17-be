@@ -1,10 +1,12 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { Students } from './students.entity';
 import {
   GetOneStudentResponse,
+  GetOneStudentResponseWithErrors,
   GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
+  Student,
 } from '../interfaces/students';
 import { DataSource } from 'typeorm';
 import { StudentsDto } from './dto/students.dto';
@@ -16,6 +18,7 @@ import { Apprenticeship } from '../interfaces/students';
 import { Status } from '../interfaces/students';
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
 import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
+import { NotFoundException } from '../errors/not-found.exception';
 
 @Injectable()
 export class StudentsService {
@@ -71,63 +74,57 @@ export class StudentsService {
     };
   }
 
-  async getOneStudent(id: string): Promise<GetOneStudentResponse> {
+  async getOneStudent(id: string): Promise<Student> {
     const findStudent = await Students.findOne({ where: { id } });
 
     if (!findStudent) {
-      return {
-        success: false,
-        message: `Student o podanym ID: ${id} nie istnieje`,
-      };
-    } else {
-      return await this.datasource
-        .createQueryBuilder(Students, 'students')
-        .where('students.id = :studentsId', { studentsId: id })
-        .select([
-          'students.courseCompletion',
-          'students.courseEngagement',
-          'students.projectDegree',
-          'students.teamProjectDegree',
-          'studentsProfile.firstName',
-          'studentsProfile.lastName',
-          'studentsProfile.targetWorkCity',
-          'studentsProfile.expectedSalary',
-          'studentsProfile.canTakeApprenticeship',
-          'studentsProfile.monthsOfCommercialExp',
-          'studentsProfile.workExperience',
-          'expectedContractType.typeContract',
-          'expectedTypeWork.typeWork',
-        ])
-        .leftJoin('students.studentsProfile', 'studentsProfile')
-        .leftJoin('students.expectedContractType', 'expectedContractType')
-        .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
-        .getOne();
+      throw new HttpException(`Student o podanym ID: ${id} nie istnieje!`, 404);
     }
+
+    return await this.datasource
+      .createQueryBuilder(Students, 'students')
+      .where('students.id = :studentsId', { studentsId: id })
+      .select([
+        'students.courseCompletion',
+        'students.courseEngagement',
+        'students.projectDegree',
+        'students.teamProjectDegree',
+        'studentsProfile.firstName',
+        'studentsProfile.lastName',
+        'studentsProfile.targetWorkCity',
+        'studentsProfile.expectedSalary',
+        'studentsProfile.canTakeApprenticeship',
+        'studentsProfile.monthsOfCommercialExp',
+        'studentsProfile.workExperience',
+        'expectedContractType.typeContract',
+        'expectedTypeWork.typeWork',
+      ])
+      .leftJoin('students.studentsProfile', 'studentsProfile')
+      .leftJoin('students.expectedContractType', 'expectedContractType')
+      .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
+      .getOne();
   }
 
-  async getOneStudentAndProfile(id: string) {
+  async getOneStudentAndProfile(id: string): Promise<Student> {
     const findStudent = await Students.findOne({ where: { id } });
 
     if (!findStudent) {
-      return {
-        success: false,
-        message: `Student o podanym ID: ${id} nie istnieje`,
-      };
-    } else {
-      return await this.datasource
-        .createQueryBuilder(Students, 'students')
-        .where('students.id = :studentsId', { studentsId: id })
-        .select([
-          'students.*',
-          'studentsProfile.*',
-          'expectedContractType.*',
-          'expectedTypeWork.*',
-        ])
-        .leftJoin('students.studentsProfile', 'studentsProfile')
-        .leftJoin('students.expectedContractType', 'expectedContractType')
-        .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
-        .execute();
+      throw new HttpException(`Student o podanym ID: ${id} nie istnieje!`, 404);
     }
+
+    return await this.datasource
+      .createQueryBuilder(Students, 'students')
+      .where('students.id = :studentsId', { studentsId: id })
+      .select([
+        'students.*',
+        'studentsProfile.*',
+        'expectedContractType.*',
+        'expectedTypeWork.*',
+      ])
+      .leftJoin('students.studentsProfile', 'studentsProfile')
+      .leftJoin('students.expectedContractType', 'expectedContractType')
+      .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
+      .execute();
   }
 
   async getFilteredStudents(

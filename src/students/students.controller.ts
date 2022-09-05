@@ -1,15 +1,28 @@
-import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Param,
+  Patch,
+} from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
   GetOneStudentResponse,
+  GetOneStudentResponseWithErrors,
   GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
+  Student,
 } from '../interfaces/students';
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { Status } from '../interfaces/students';
 import { Apprenticeship } from '../interfaces/students';
+import { NotFoundException } from '../errors/not-found.exception';
 
 @Controller('students')
 export class StudentsController {
@@ -18,12 +31,12 @@ export class StudentsController {
   ) {}
 
   @Get('/:id')
-  oneStudent(@Param('id') id: string): Promise<GetOneStudentResponse> {
+  oneStudent(@Param('id') id: string): Promise<Student> {
     return this.studentsService.getOneStudent(id);
   }
 
   @Get('/profile/:id')
-  oneStudentAndProfile(@Param('id') id: string): Promise<GetOneStudentResponse> {
+  oneStudentAndProfile(@Param('id') id: string): Promise<Student> {
     return this.studentsService.getOneStudentAndProfile(id);
   }
 

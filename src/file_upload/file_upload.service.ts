@@ -34,7 +34,7 @@ export class FileUploadService {
 
     const csvData = await this.csvParser.parse(stream, Student);
 
-    const userRoleName = 'student'; // from csv it will be always studnet
+    const userRoleName = 'student'; // from csv it will be always student
     const userGeneratedPwd = '123456'; // @TODO: Change it to a random password
 
     for (const student of csvData.list) {

@@ -27,6 +27,8 @@ export type GetOneStudentResponse =
       message: string;
     };
 
+export type GetOneStudentResponseWithErrors = Student;
+
 export interface PaginatedAllStudentsResponse {
   allStudents: Student[];
   totalItems: number;

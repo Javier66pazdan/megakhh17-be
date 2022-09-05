@@ -16,7 +16,7 @@ export class PasswordService {
     if (email) {
       try {
         //
-        // chack is user in db
+        // check is user in db
         //
         const user = await User.findOne({
           where: {
