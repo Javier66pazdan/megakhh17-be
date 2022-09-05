@@ -7,7 +7,9 @@ import {
   HttpStatus,
   Inject,
   Param,
+  ParseIntPipe,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
@@ -23,6 +25,7 @@ import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { Status } from '../interfaces/students';
 import { Apprenticeship } from '../interfaces/students';
 import { NotFoundException } from '../errors/not-found.exception';
+import { GetAllAvailableStudentsQuery } from './param-validation/students.param-validation';
 
 @Controller('students')
 export class StudentsController {
@@ -42,13 +45,12 @@ export class StudentsController {
 
   @Get('/all/:pageNo/:itemsPerPage')
   allAvailableStudents(
-    @Param('pageNo') pageNo: number,
-    @Param('itemsPerPage') itemsPerPage: number,
+    @Param('pageNo', ParseIntPipe)
+    pageNo: number,
+    @Param('itemsPerPage', ParseIntPipe)
+    itemsPerPage: number,
   ): Promise<PaginatedAllStudentsResponse> {
-    return this.studentsService.getAllAvailableStudents(
-      Number(pageNo),
-      Number(itemsPerPage),
-    );
+    return this.studentsService.getAllAvailableStudents(pageNo, itemsPerPage);
   }
 
   @Get(
