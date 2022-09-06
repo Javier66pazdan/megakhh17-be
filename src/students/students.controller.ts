@@ -57,19 +57,22 @@ export class StudentsController {
     '/filter/:pageNo/:itemsPerPage/:searchText/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWorkId/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
   )
   filteredStudents(
-    @Param('pageNo') pageNo: number,
-    @Param('itemsPerPage') itemsPerPage: number,
+    @Param('pageNo', ParseIntPipe) pageNo: number,
+    @Param('itemsPerPage', ParseIntPipe) itemsPerPage: number,
     @Param('searchText') searchText?: string,
-    @Param('courseCompletion') courseCompletion?: number,
-    @Param('courseEngagement') courseEngagement?: number,
-    @Param('projectDegree') projectDegree?: number,
-    @Param('teamProjectDegree') teamProjectDegree?: number,
-    @Param('expectedTypeWorkId') expectedTypeWorkId?: string,
-    @Param('expectedContractTypeId') expectedContractTypeId?: string,
-    @Param('expectedSalaryMin') expectedSalaryMin?: number,
-    @Param('expectedSalaryMax') expectedSalaryMax?: number,
-    @Param('canTakeApprenticeship') canTakeApprenticeship?: Apprenticeship,
-    @Param('monthsOfCommercialExp') monthsOfCommercialExp?: number,
+    @Param('courseCompletion', ParseIntPipe) courseCompletion?: number,
+    @Param('courseEngagement', ParseIntPipe) courseEngagement?: number,
+    @Param('projectDegree', ParseIntPipe) projectDegree?: number,
+    @Param('teamProjectDegree', ParseIntPipe) teamProjectDegree?: number,
+    @Param('expectedTypeWorkId', ParseIntPipe) expectedTypeWorkId?: string,
+    @Param('expectedContractTypeId', ParseIntPipe)
+    expectedContractTypeId?: string,
+    @Param('expectedSalaryMin', ParseIntPipe) expectedSalaryMin?: number,
+    @Param('expectedSalaryMax', ParseIntPipe) expectedSalaryMax?: number,
+    @Param('canTakeApprenticeship')
+    canTakeApprenticeship?: Apprenticeship,
+    @Param('monthsOfCommercialExp', ParseIntPipe)
+    monthsOfCommercialExp?: number,
   ): Promise<PaginatedFilteredStudentsResponse> {
     return this.studentsService.getFilteredStudents(
       Number(pageNo),
@@ -99,7 +102,7 @@ export class StudentsController {
   @Patch('/status/:id/:status')
   updateStatus(
     @Param('id') id: string,
-    @Param('status') status: Status,
+    @Param('status', ParseIntPipe) status: Status,
   ): Promise<GetUpdateStatusResponse> {
     return this.studentsService.updateStatus(id, status);
   }

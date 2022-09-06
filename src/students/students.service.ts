@@ -277,9 +277,11 @@ export class StudentsService {
     const findUser = await User.findOne({ where: { id: newStudent.userId } });
 
     if (!findUser) {
-      return {
-        message: 'Nie znaleziono studenta z takim id.',
-      };
+      // message: 'Nie znaleziono studenta o takim id.',
+      throw new HttpException(
+        `Student o podanym ID: ${newStudent.userId} nie istnieje!`,
+        404,
+      );
     }
 
     student.courseCompletion = newStudent.courseCompletion;
@@ -307,11 +309,9 @@ export class StudentsService {
         id,
       },
     });
+
     if (!findStudent) {
-      return {
-        success: false,
-        message: `Student o podanym ID: ${id} nie istnieje!`,
-      };
+      throw new HttpException(`Student o podanym ID: ${id} nie istnieje!`, 404);
     }
 
     if (findStudent.expectedContractType === null) {
@@ -439,19 +439,10 @@ export class StudentsService {
     const findStudent = await Students.findOne({
       where: {
         id,
-        status,
       },
     });
-    if (!id) {
-      return {
-        success: false,
-        message: `Student o podanym ID: ${id} nie istnieje!`,
-      };
-    } else if (findStudent) {
-      return {
-        success: false,
-        message: `Student o ID: ${id} posiada już podany status!`,
-      };
+    if (!findStudent) {
+      throw new HttpException(`Student o podanym ID: ${id} nie istnieje!`, 404);
     } else {
       await Students.update(id, { status });
     }
