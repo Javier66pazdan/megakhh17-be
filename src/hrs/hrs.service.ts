@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import {
   GetHrsResponse,
   GetOneHrResponse,
@@ -29,19 +29,13 @@ export class HrsService {
     const user = await this.userService.register(userDto);
 
     if (!user) {
-      return {
-        success: false,
-        message: 'Nie udało się utworzyć konta HR.',
-      };
+      throw new HttpException('Nie udało się utworzyć konta HR.', 400);
     }
 
     const findUser = await User.findOne({ where: { email: newHr.email } });
 
     if (!findUser) {
-      return {
-        success: false,
-        message: 'Nie udało się utworzyć konta HR.',
-      };
+      throw new HttpException('Nie udało się utworzyć konta HR.', 400);
     }
 
     hr.fullName = newHr.fullName;
@@ -62,10 +56,10 @@ export class HrsService {
       .getOne();
 
     if (!hr) {
-      return {
-        success: false,
-        message: 'Podano niepoprawne id użytkownika.',
-      };
+      throw new HttpException(
+        'Podano niepoprawne id użytkownika (user id).',
+        404,
+      );
     }
 
     const responseData = {

@@ -61,8 +61,7 @@ export class PasswordService {
                   </div>`,
           );
           return res.json({
-            message:
-              'recovery link został wysłany na podany adres, tym razem front nie działa',
+            message: 'Recovery link został wysłany na podany adres',
           });
         }
       } catch (err) {
