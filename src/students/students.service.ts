@@ -277,7 +277,6 @@ export class StudentsService {
     const findUser = await User.findOne({ where: { id: newStudent.userId } });
 
     if (!findUser) {
-      // message: 'Nie znaleziono studenta o takim id.',
       throw new HttpException(
         `Student o podanym ID: ${newStudent.userId} nie istnieje!`,
         404,
