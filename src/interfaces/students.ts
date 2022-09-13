@@ -1,6 +1,6 @@
 export enum Apprenticeship {
-  YES = 'Tak',
-  NO = 'Nie',
+  YES = 'tak',
+  NO = 'nie',
 }
 
 export enum Status {

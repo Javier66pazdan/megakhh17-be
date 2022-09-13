@@ -40,14 +40,6 @@ export class StudentsHrsController {
     );
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateStudentsHrDto: UpdateStudentsHrDto,
-  ) {
-    return this.studentsHrsService.update(+id, updateStudentsHrDto);
-  }
-
   @Delete('/:studentId/:hrId')
   remove(
     @Param('studentId') studentId: string,

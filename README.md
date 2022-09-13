@@ -20,6 +20,9 @@ In the project directory, you can run:
 
     nest start --watch
 
+## API info docs
+[API info docs](./src/media/docs/API_info_docs.pdf)
+
 ### Headhunter Front-End Resources
 
 **Github:** <https://github.com/obrebskim/megakhh17-fe>

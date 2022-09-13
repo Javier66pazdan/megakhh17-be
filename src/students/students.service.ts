@@ -278,7 +278,7 @@ export class StudentsService {
 
     if (!findUser) {
       throw new HttpException(
-        `Student o podanym ID: ${newStudent.userId} nie istnieje!`,
+        `Użytkownik o podanym ID: ${newStudent.userId} nie istnieje!`,
         404,
       );
     }
@@ -299,6 +299,7 @@ export class StudentsService {
     id: string,
     updateStudentProfile: UpdateStudentProfileDto,
   ): Promise<StudentsProfileUpdateResponse> {
+
     const findStudent = await Students.findOne({
       relations: {
         expectedContractType: true,

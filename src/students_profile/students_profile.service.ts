@@ -10,7 +10,7 @@ import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entit
 export class StudentsProfileService {
   async create(
     newProfile: CreateStudentsProfileDto,
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; success: boolean }> {
     const studentProfile = new StudentsProfile();
 
     const { registerToken } = newProfile;
@@ -91,6 +91,7 @@ export class StudentsProfileService {
     await Students.update(userStudent.students.id, { status: 1 });
 
     return {
+      success: true,
       message: 'Profil utworzony.',
     };
   }
