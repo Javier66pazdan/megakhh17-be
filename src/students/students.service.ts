@@ -30,8 +30,8 @@ export class StudentsService {
   ): Promise<PaginatedAllStudentsResponse> {
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
-      .where('students.status IN (:...studentsStatus)', {
-        studentsStatus: [1, 2],
+      .where('students.status IN (:...studentStatus)', {
+        studentStatus: [2, 3],
       })
       .getCount();
 
@@ -53,8 +53,8 @@ export class StudentsService {
         'expectedContractType.typeContract',
         'expectedTypeWork.typeWork',
       ])
-      .where('students.status IN (:...studentsStatus)', {
-        studentsStatus: [1, 2],
+      .where('students.status IN (:...studentStatus)', {
+        studentStatus: [2, 3],
       })
       .leftJoin('students.studentsProfile', 'studentsProfile')
       .leftJoin('students.expectedContractType', 'expectedContractType')
@@ -62,7 +62,6 @@ export class StudentsService {
       .offset(itemsPerPage * (currentPage - 1))
       .limit(itemsPerPage)
       .getMany();
-
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     return {
@@ -299,7 +298,6 @@ export class StudentsService {
     id: string,
     updateStudentProfile: UpdateStudentProfileDto,
   ): Promise<StudentsProfileUpdateResponse> {
-
     const findStudent = await Students.findOne({
       relations: {
         expectedContractType: true,

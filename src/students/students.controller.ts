@@ -9,8 +9,10 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Query, UsePipes, ValidationPipe
-} from "@nestjs/common";
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
   GetOneStudentResponse,
