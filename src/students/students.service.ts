@@ -441,6 +441,8 @@ export class StudentsService {
     });
     if (!findStudent) {
       throw new HttpException(`Student o podanym ID: ${id} nie istnieje!`, 404);
+    } else if (status < 0 || status > 3) {
+      throw new HttpException(`Dozwolony status to: 0, 1, 2 lub 3!`, 400);
     } else {
       await Students.update(id, { status });
     }
