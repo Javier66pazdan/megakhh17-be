@@ -1,8 +1,6 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { Students } from './students.entity';
 import {
-  GetOneStudentResponse,
-  GetOneStudentResponseWithErrors,
   GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
@@ -18,21 +16,40 @@ import { Apprenticeship } from '../interfaces/students';
 import { Status } from '../interfaces/students';
 import { ExpectedContractType } from '../expected_contract_type/expected_contract_type.entity';
 import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entity';
-import { NotFoundException } from '../errors/not-found.exception';
+import { StudentsHrs } from '../students_hrs/students_hrs.entity';
+import { Hrs } from '../hrs/hrs.entity';
 
 @Injectable()
 export class StudentsService {
   constructor(@Inject(DataSource) private datasource: DataSource) {}
 
   async getAllAvailableStudents(
+    hrId,
     currentPage = 1,
     itemsPerPage,
   ): Promise<PaginatedAllStudentsResponse> {
+    const findHr = await Hrs.findOne({ where: { id: hrId } });
+
+    if (!findHr) {
+      throw new HttpException(`HR o podanym ID: '${hrId}' nie istnieje!`, 404);
+    }
+
+    const hrStudents = await this.datasource
+      .createQueryBuilder(StudentsHrs, 'studentsHrs')
+      .where('studentsHrs.hrsId = :studentsHrsHrsId', {
+        studentsHrsHrsId: hrId,
+      })
+      .leftJoin('students', 's', 'studentsHrs.studentsId = s.id')
+      .select(['studentsHrs.studentsId']);
+
     const totalItems = await this.datasource
       .createQueryBuilder(Students, 'students')
       .where('students.status IN (:...studentStatus)', {
         studentStatus: [2, 3],
       })
+      .andWhere('students.id NOT IN (' + hrStudents.getQuery() + ')')
+      .setParameters(hrStudents.getParameters())
+      .leftJoin('students.studentsHrs', 'studentsHrs')
       .getCount();
 
     const allStudents = await this.datasource
@@ -56,12 +73,16 @@ export class StudentsService {
       .where('students.status IN (:...studentStatus)', {
         studentStatus: [2, 3],
       })
+      .andWhere('students.id NOT IN (' + hrStudents.getQuery() + ')')
+      .setParameters(hrStudents.getParameters())
+      .leftJoin('students.studentsHrs', 'studentsHrs')
       .leftJoin('students.studentsProfile', 'studentsProfile')
       .leftJoin('students.expectedContractType', 'expectedContractType')
       .leftJoin('students.expectedTypeWork', 'expectedTypeWork')
       .offset(itemsPerPage * (currentPage - 1))
       .limit(itemsPerPage)
       .getMany();
+
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     return {

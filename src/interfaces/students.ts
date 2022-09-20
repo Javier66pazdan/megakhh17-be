@@ -31,6 +31,7 @@ export type GetOneStudentResponseWithErrors = Student;
 
 export interface PaginatedAllStudentsResponse {
   allStudents: Student[];
+  // totalFilteredItems: number;
   totalItems: number;
   totalPages: number;
   itemsPerPage: number;

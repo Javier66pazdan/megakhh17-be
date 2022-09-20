@@ -45,14 +45,19 @@ export class StudentsController {
     return this.studentsService.getOneStudentAndProfile(id);
   }
 
-  @Get('/all/:pageNo/:itemsPerPage')
+  @Get('/all/:hrId/:pageNo/:itemsPerPage')
   allAvailableStudents(
+    @Param('hrId') hrId: string,
     @Param('pageNo', ParseIntPipe)
     pageNo: number,
     @Param('itemsPerPage', ParseIntPipe)
     itemsPerPage: number,
   ): Promise<PaginatedAllStudentsResponse> {
-    return this.studentsService.getAllAvailableStudents(pageNo, itemsPerPage);
+    return this.studentsService.getAllAvailableStudents(
+      hrId,
+      pageNo,
+      itemsPerPage,
+    );
   }
 
   @Get(
