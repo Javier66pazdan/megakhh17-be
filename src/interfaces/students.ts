@@ -4,7 +4,7 @@ export enum Apprenticeship {
 }
 
 export enum Status {
-  NOT_ACTIVE,
+  NOT_ACTIVE = 1,
   AVAILABLE,
   RESERVED,
   HIRED,
@@ -31,7 +31,6 @@ export type GetOneStudentResponseWithErrors = Student;
 
 export interface PaginatedAllStudentsResponse {
   allStudents: Student[];
-  // totalFilteredItems: number;
   totalItems: number;
   totalPages: number;
   itemsPerPage: number;
@@ -39,7 +38,7 @@ export interface PaginatedAllStudentsResponse {
 }
 
 export interface PaginatedFilteredStudentsResponse {
-  filteredStudents: Student[];
+  filteredStudents: [Student[], number];
   totalItems: number;
   totalPages: number;
   itemsPerPage: number;

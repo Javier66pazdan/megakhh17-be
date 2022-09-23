@@ -26,7 +26,7 @@ export class StudentsService {
   async getAllAvailableStudents(
     hrId,
     currentPage = 1,
-    itemsPerPage,
+    itemsPerPage = 10,
   ): Promise<PaginatedAllStudentsResponse> {
     const findHr = await Hrs.findOne({ where: { id: hrId } });
 
@@ -149,7 +149,7 @@ export class StudentsService {
 
   async getFilteredStudents(
     currentPage = 1,
-    itemsPerPage: number,
+    itemsPerPage = 10,
     searchText?: string,
     courseCompletion?: number,
     courseEngagement?: number,
@@ -162,64 +162,6 @@ export class StudentsService {
     canTakeApprenticeship?: Apprenticeship,
     monthsOfCommercialExp?: number,
   ): Promise<PaginatedFilteredStudentsResponse> {
-    const totalItems = await this.datasource
-      .createQueryBuilder(Students, 'students')
-      .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
-      .leftJoinAndSelect(
-        'students.expectedContractType',
-        'expectedContractType',
-      )
-      .leftJoinAndSelect('students.expectedTypeWork', 'expectedTypeWork')
-      .where(`MATCH(firstName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(lastName) AGAINST ('${searchText}' IN BOOLEAN MODE)`)
-      .orWhere(
-        `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
-      )
-      .where('students.status IN (:...studentsStatus)', {
-        studentsStatus: [1, 2],
-      })
-      .andWhere('students.courseCompletion >= :courseCompletion', {
-        courseCompletion,
-      })
-      .andWhere('students.courseEngagement >= :courseEngagement', {
-        courseEngagement,
-      })
-      .andWhere('students.projectDegree >= :projectDegree', {
-        projectDegree,
-      })
-      .andWhere('students.teamProjectDegree >= :teamProjectDegree', {
-        teamProjectDegree,
-      })
-      .andWhere('expectedTypeWork.id IN(:ids)', {
-        ids: String(expectedTypeWorkId)
-          .split(',')
-          .map((i) => Number(i)),
-      })
-      .andWhere('expectedContractType.id IN(:id)', {
-        id: String(expectedContractTypeId)
-          .split(',')
-          .map((i) => Number(i)),
-      })
-      .andWhere('studentsProfile.expectedSalary >= :expectedSalaryMin', {
-        expectedSalaryMin,
-      })
-      .andWhere('studentsProfile.expectedSalary <= :expectedSalaryMax', {
-        expectedSalaryMax,
-      })
-      .andWhere(
-        'studentsProfile.canTakeApprenticeship = :canTakeApprenticeship',
-        {
-          canTakeApprenticeship,
-        },
-      )
-      .andWhere(
-        'studentsProfile.monthsOfCommercialExp >= :monthsOfCommercialExp',
-        {
-          monthsOfCommercialExp,
-        },
-      )
-      .getCount();
-
     const filteredStudents = await this.datasource
       .createQueryBuilder(Students, 'students')
       .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
@@ -234,7 +176,7 @@ export class StudentsService {
         `MATCH(targetWorkCity) AGAINST ('${searchText}' IN BOOLEAN MODE)`,
       )
       .where('students.status IN (:...studentsStatus)', {
-        studentsStatus: [1, 2],
+        studentsStatus: [2, 3],
       })
       .andWhere('students.courseCompletion >= :courseCompletion', {
         courseCompletion,
@@ -276,10 +218,11 @@ export class StudentsService {
           monthsOfCommercialExp,
         },
       )
-      .offset(itemsPerPage * (currentPage - 1))
-      .limit(itemsPerPage)
-      .getMany();
+      .offset(itemsPerPage * (currentPage - 1) || 0)
+      .limit(itemsPerPage || 10)
+      .getManyAndCount();
 
+    const totalItems = filteredStudents[1];
     const totalPages = Math.ceil(totalItems / itemsPerPage);
 
     return {

@@ -2,21 +2,14 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
-  HttpException,
-  HttpStatus,
   Inject,
   Param,
   ParseIntPipe,
   Patch,
   Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
 import { StudentsService } from './students.service';
 import {
-  GetOneStudentResponse,
-  GetOneStudentResponseWithErrors,
   GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
@@ -25,9 +18,7 @@ import {
 import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
 import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
 import { Status } from '../interfaces/students';
-import { Apprenticeship } from '../interfaces/students';
-import { NotFoundException } from '../errors/not-found.exception';
-import { GetAllAvailableStudentsQuery } from './param-validation/students.param-validation';
+import { FilteredStudentsDto } from './dto/filtered-students.dto';
 
 @Controller('students')
 export class StudentsController {
@@ -60,26 +51,24 @@ export class StudentsController {
     );
   }
 
-  @Get(
-    '/filter/:pageNo/:itemsPerPage/:searchText/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWorkId/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
-  )
+  @Get('/filter/search')
   filteredStudents(
-    @Param('pageNo', ParseIntPipe) pageNo: number,
-    @Param('itemsPerPage', ParseIntPipe) itemsPerPage: number,
-    @Param('searchText') searchText?: string,
-    @Param('courseCompletion', ParseIntPipe) courseCompletion?: number,
-    @Param('courseEngagement', ParseIntPipe) courseEngagement?: number,
-    @Param('projectDegree', ParseIntPipe) projectDegree?: number,
-    @Param('teamProjectDegree', ParseIntPipe) teamProjectDegree?: number,
-    @Param('expectedTypeWorkId', ParseIntPipe) expectedTypeWorkId?: string,
-    @Param('expectedContractTypeId', ParseIntPipe)
-    expectedContractTypeId?: string,
-    @Param('expectedSalaryMin', ParseIntPipe) expectedSalaryMin?: number,
-    @Param('expectedSalaryMax', ParseIntPipe) expectedSalaryMax?: number,
-    @Param('canTakeApprenticeship')
-    canTakeApprenticeship?: Apprenticeship,
-    @Param('monthsOfCommercialExp', ParseIntPipe)
-    monthsOfCommercialExp?: number,
+    @Query()
+    {
+      pageNo,
+      itemsPerPage,
+      searchText,
+      courseCompletion,
+      courseEngagement,
+      projectDegree,
+      teamProjectDegree,
+      expectedTypeWorkId,
+      expectedContractTypeId,
+      expectedSalaryMin,
+      expectedSalaryMax,
+      canTakeApprenticeship,
+      monthsOfCommercialExp,
+    }: FilteredStudentsDto,
   ): Promise<PaginatedFilteredStudentsResponse> {
     return this.studentsService.getFilteredStudents(
       Number(pageNo),
