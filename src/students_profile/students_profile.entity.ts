@@ -76,7 +76,6 @@ export class StudentsProfile extends BaseEntity {
     default: 0,
   })
   expectedSalary: number;
-  //W dokumentacji jest literówka: exprctedSalary
 
   @Column({
     type: 'enum',

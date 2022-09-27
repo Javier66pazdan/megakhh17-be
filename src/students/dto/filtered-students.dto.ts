@@ -49,7 +49,8 @@ export class FilteredStudentsDto {
   @IsInt()
   expectedSalaryMax?: number;
 
-  @IsEnum(Apprenticeship)
+  @IsOptional()
+  // @IsEnum(Apprenticeship)
   canTakeApprenticeship?: Apprenticeship;
 
   @IsOptional()

@@ -1,24 +1,16 @@
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Patch, Query } from "@nestjs/common";
+import { StudentsService } from "./students.service";
 import {
-  Body,
-  Controller,
-  Get,
-  Inject,
-  Param,
-  ParseIntPipe,
-  Patch,
-  Query,
-} from '@nestjs/common';
-import { StudentsService } from './students.service';
-import {
+  Apprenticeship,
   GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
-  Student,
-} from '../interfaces/students';
-import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
-import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
-import { Status } from '../interfaces/students';
-import { FilteredStudentsDto } from './dto/filtered-students.dto';
+  Status,
+  Student
+} from "../interfaces/students";
+import { UpdateStudentProfileDto } from "../students_profile/dto/updateStudentProfileDto";
+import { StudentsProfileUpdateResponse } from "../interfaces/students_profile";
+import { FilteredStudentsDto } from "./dto/filtered-students.dto";
 
 @Controller('students')
 export class StudentsController {

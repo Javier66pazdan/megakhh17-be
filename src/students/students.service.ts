@@ -159,9 +159,15 @@ export class StudentsService {
     expectedContractTypeId?: string,
     expectedSalaryMin?: number,
     expectedSalaryMax?: number,
-    canTakeApprenticeship?: Apprenticeship,
+    canTakeApprenticeship?: Apprenticeship | '',
     monthsOfCommercialExp?: number,
   ): Promise<PaginatedFilteredStudentsResponse> {
+    const apprenticeshipDefault =
+      canTakeApprenticeship === '' ? Apprenticeship.NO : canTakeApprenticeship;
+
+    const maxSalaryDefault =
+      expectedSalaryMax === 0 ? 999999 : expectedSalaryMax;
+
     const filteredStudents = await this.datasource
       .createQueryBuilder(Students, 'students')
       .leftJoinAndSelect('students.studentsProfile', 'studentsProfile')
@@ -204,12 +210,12 @@ export class StudentsService {
         expectedSalaryMin,
       })
       .andWhere('studentsProfile.expectedSalary <= :expectedSalaryMax', {
-        expectedSalaryMax,
+        expectedSalaryMax: maxSalaryDefault,
       })
       .andWhere(
         'studentsProfile.canTakeApprenticeship = :canTakeApprenticeship',
         {
-          canTakeApprenticeship,
+          canTakeApprenticeship: apprenticeshipDefault,
         },
       )
       .andWhere(
