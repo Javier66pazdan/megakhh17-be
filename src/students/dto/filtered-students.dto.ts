@@ -1,10 +1,4 @@
-import {
-  IsEnum,
-  IsInt,
-  IsNotEmpty,
-  IsNumberString,
-  IsOptional,
-} from 'class-validator';
+import { IsInt, IsNotEmpty, IsNumberString, IsOptional } from 'class-validator';
 import { Apprenticeship } from '../../interfaces/students';
 
 export class FilteredStudentsDto {
@@ -36,10 +30,10 @@ export class FilteredStudentsDto {
   teamProjectDegree?: number;
 
   @IsOptional()
-  expectedTypeWorkId?: string;
+  expectedTypeWorkId?: string[];
 
   @IsOptional()
-  expectedContractTypeId?: string;
+  expectedContractTypeId?: string[];
 
   @IsOptional()
   @IsInt()
@@ -50,7 +44,6 @@ export class FilteredStudentsDto {
   expectedSalaryMax?: number;
 
   @IsOptional()
-  // @IsEnum(Apprenticeship)
   canTakeApprenticeship?: Apprenticeship;
 
   @IsOptional()

@@ -155,8 +155,8 @@ export class StudentsService {
     courseEngagement?: number,
     projectDegree?: number,
     teamProjectDegree?: number,
-    expectedTypeWorkId?: string,
-    expectedContractTypeId?: string,
+    expectedTypeWorkId?: string[],
+    expectedContractTypeId?: string[],
     expectedSalaryMin?: number,
     expectedSalaryMax?: number,
     canTakeApprenticeship?: Apprenticeship | '',
@@ -167,6 +167,9 @@ export class StudentsService {
 
     const maxSalaryDefault =
       expectedSalaryMax === 0 ? 999999 : expectedSalaryMax;
+
+    const expectedTypeWorkDefault =
+      expectedTypeWorkId === [''] ? ['1', '2', '3', '4'] : expectedTypeWorkId;
 
     const filteredStudents = await this.datasource
       .createQueryBuilder(Students, 'students')
@@ -197,9 +200,10 @@ export class StudentsService {
         teamProjectDegree,
       })
       .andWhere('expectedTypeWork.id IN(:ids)', {
-        ids: String(expectedTypeWorkId)
-          .split(',')
-          .map((i) => Number(i)),
+        id: expectedTypeWorkDefault,
+        // ids: String(expectedTypeWorkId)
+        //   .split(',')
+        //   .map((i) => Number(i)),
       })
       .andWhere('expectedContractType.id IN(:id)', {
         id: String(expectedContractTypeId)
