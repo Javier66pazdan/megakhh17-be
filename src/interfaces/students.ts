@@ -1,4 +1,14 @@
-import { Status } from '../students/students.entity';
+export enum Apprenticeship {
+  YES = 'tak',
+  NO = 'nie',
+}
+
+export enum Status {
+  NOT_ACTIVE = 1,
+  AVAILABLE,
+  RESERVED,
+  HIRED,
+}
 
 export interface Student {
   id: string;
@@ -17,6 +27,8 @@ export type GetOneStudentResponse =
       message: string;
     };
 
+export type GetOneStudentResponseWithErrors = Student;
+
 export interface PaginatedAllStudentsResponse {
   allStudents: Student[];
   totalItems: number;
@@ -26,7 +38,7 @@ export interface PaginatedAllStudentsResponse {
 }
 
 export interface PaginatedFilteredStudentsResponse {
-  filteredStudents: Student[];
+  filteredStudents: [Student[], number];
   totalItems: number;
   totalPages: number;
   itemsPerPage: number;

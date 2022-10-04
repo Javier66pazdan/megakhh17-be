@@ -1,16 +1,15 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { RegisterUserResponse } from '../interfaces/user';
 import { User } from './user.entity';
 import { hashPwd } from '../utils/hash-pwd';
 import { Role } from '../role/role.entity';
 import { v4 as uuid } from 'uuid';
-import { MailService } from "../mail/mail.service";
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
-  constructor(@Inject(MailService) private mailService: MailService) {
-  }
+  constructor(@Inject(MailService) private mailService: MailService) {}
 
   filter(user: User): RegisterUserResponse {
     const { id, email } = user;
@@ -33,10 +32,10 @@ export class UserService {
     user.role = role;
 
     if (await User.findOne({ where: { email: user.email } })) {
-      return {
-        isSuccessful: false,
-        message: `Użytkownik z e-mailem: '${user.email}' już istnieje. Zaloguj się na konto lub stwórz konto używając inny adres e-mail.`,
-      };
+      throw new HttpException(
+        `Użytkownik z e-mailem: '${user.email}' już istnieje. Zaloguj się na konto lub stwórz konto używając inny adres e-mail.`,
+        400,
+      );
     }
 
     if (newUser.roleName === 'student') {

@@ -2,10 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinColumn,
-  ManyToOne,
   OneToMany,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
@@ -25,8 +22,6 @@ export class Role extends BaseEntity {
   })
   createdAt: Date;
 
-  // @ManyToOne(type => User, entity => entity.role)
-  // @JoinColumn()
   @OneToMany((type) => User, (entity) => entity.role)
   user: User;
 }

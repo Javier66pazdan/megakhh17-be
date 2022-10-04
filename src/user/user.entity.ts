@@ -2,7 +2,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  Generated,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -21,7 +20,9 @@ export class User extends BaseEntity {
   })
   email: string;
 
-  @Column() // password
+  @Column({
+    select: false,
+  })
   pwdHash: string;
 
   @Column({
@@ -41,23 +42,12 @@ export class User extends BaseEntity {
   })
   createdAt: Date;
 
-  // @ManyToOne((type) => Hrs, (entity) => entity.user)
-  // @JoinColumn()
-  // hrs: Hrs;
-
   @OneToOne((type) => Hrs, (entity) => entity.user)
   hrs: Hrs;
-
-  // @ManyToOne((type) => Students, (entity) => entity.user)
-  // @JoinColumn()
-  // students: Students;
 
   @OneToOne((type) => Students, (entity) => entity.user)
   students: Students;
 
-  // @OneToMany((type) => Role, (entity) => entity.user)
-  // role: Role[];
   @ManyToOne((type) => Role, (entity) => entity.user)
-  // @JoinColumn()
   role: Role;
 }

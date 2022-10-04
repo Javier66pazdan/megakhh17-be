@@ -8,9 +8,8 @@ A platform to find & hire a JavaScript programmer who is both passionate and kno
 ![Node](https://img.shields.io/badge/Node.js-339933.svg?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
-![Typeorm](https://img.shields.io/badge/Typeform-262627.svg?style=for-the-badge&logo=Typeform&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
-
+![TypeORM](https://img.shields.io/badge/-typeorm-orange?style=for-the-badge&logo=typeorm)
 ## Live
 
 in progress
@@ -19,7 +18,10 @@ in progress
 
 In the project directory, you can run:
 
-    npm start
+    nest start --watch
+
+## API info docs
+[API info docs](./src/media/docs/API_info_docs.pdf)
 
 ### Headhunter Front-End Resources
 

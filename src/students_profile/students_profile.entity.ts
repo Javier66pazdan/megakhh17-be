@@ -7,11 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Students } from '../students/students.entity';
-
-export enum Apprenticeship {
-  YES = 'Tak',
-  NO = 'Nie',
-}
+import { Apprenticeship } from '../interfaces/students';
 
 @Entity()
 export class StudentsProfile extends BaseEntity {
@@ -80,7 +76,6 @@ export class StudentsProfile extends BaseEntity {
     default: 0,
   })
   expectedSalary: number;
-  //W dokumentacji jest literówka: exprctedSalary
 
   @Column({
     type: 'enum',

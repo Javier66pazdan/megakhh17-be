@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { CreateStudentsHrDto } from './dto/create-students_hr.dto';
 import { UpdateStudentsHrDto } from './dto/update-students_hr.dto';
 import {
@@ -94,22 +94,19 @@ export class StudentsHrsService {
       },
     });
     if (findStudentHr) {
-      return {
-        success: false,
-        message: `Student o podanym ID jest już przypisany do HR o podanym ID`,
-      };
+      throw new HttpException(
+        `Student o podanym ID jest już przypisany do HR o podanym ID`,
+        400,
+      );
     }
 
     if (!hr) {
-      return {
-        success: false,
-        message: `HR o podanym ID: ${hrId} nie istnieje!`,
-      };
+      throw new HttpException(`HR o podanym ID: ${hrId} nie istnieje!`, 404);
     } else if (!student) {
-      return {
-        success: false,
-        message: `Student o podanym ID: ${studentId} nie istnieje!`,
-      };
+      throw new HttpException(
+        `Student o podanym ID: ${studentId} nie istnieje!`,
+        404,
+      );
     } else {
       const reservedStudents = await this.dataSource
         .createQueryBuilder(StudentsHrs, 'studentsHrs')
@@ -127,10 +124,10 @@ export class StudentsHrsService {
         .getOne();
 
       if (reservedStudents >= maxResStudents.maxReservedStudents) {
-        return {
-          success: false,
-          message: `Niestety zarezerwowałeś już maksymalną ilość studentów: ${maxResStudents.maxReservedStudents}!`,
-        };
+        throw new HttpException(
+          `Niestety zarezerwowałeś już maksymalną ilość studentów: ${maxResStudents.maxReservedStudents}!`,
+          400,
+        );
       }
 
       const studentHr = new StudentsHrs();
@@ -148,12 +145,6 @@ export class StudentsHrsService {
         message: `Student o ID: ${studentId} został pomyślnie przypisany do HR o ID: ${hrId}`,
       };
     }
-  }
-
-  findOne(id: string) {}
-
-  update(id: number, updateStudentsHrDto: UpdateStudentsHrDto) {
-    return `This action updates a #${id} studentsHr`;
   }
 
   async removeHrStudent(

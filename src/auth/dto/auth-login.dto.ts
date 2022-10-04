@@ -5,6 +5,6 @@ export class AuthLoginDto {
   @Length(4, 255, { message: 'Email musi mieć od 4 do 255 znaków.' })
   email: string;
 
-  @Length(4, 255, { message: 'Hasło musi mieć minimum 8 znaków.' })
+  @Length(8, 255, { message: 'Hasło musi mieć minimum 8 znaków.' })
   pwd: string;
 }

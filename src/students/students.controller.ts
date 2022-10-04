@@ -1,15 +1,16 @@
-import { Body, Controller, Get, Inject, Param, Patch } from '@nestjs/common';
-import { StudentsService } from './students.service';
+import { Body, Controller, Get, Inject, Param, ParseIntPipe, Patch, Query } from "@nestjs/common";
+import { StudentsService } from "./students.service";
 import {
-  GetOneStudentResponse,
+  Apprenticeship,
   GetUpdateStatusResponse,
   PaginatedAllStudentsResponse,
   PaginatedFilteredStudentsResponse,
-} from '../interfaces/students';
-import { UpdateStudentProfileDto } from '../students_profile/dto/updateStudentProfileDto';
-import { StudentsProfileUpdateResponse } from '../interfaces/students_profile';
-import { Status } from './students.entity';
-import { Apprenticeship } from '../students_profile/students_profile.entity';
+  Status,
+  Student
+} from "../interfaces/students";
+import { UpdateStudentProfileDto } from "../students_profile/dto/updateStudentProfileDto";
+import { StudentsProfileUpdateResponse } from "../interfaces/students_profile";
+import { FilteredStudentsDto } from "./dto/filtered-students.dto";
 
 @Controller('students')
 export class StudentsController {
@@ -18,43 +19,48 @@ export class StudentsController {
   ) {}
 
   @Get('/:id')
-  oneStudent(@Param('id') id: string): Promise<GetOneStudentResponse> {
+  oneStudent(@Param('id') id: string): Promise<Student> {
     return this.studentsService.getOneStudent(id);
   }
 
   @Get('/profile/:id')
-  oneStudentAndProfile(@Param('id') id: string): Promise<GetOneStudentResponse> {
+  oneStudentAndProfile(@Param('id') id: string): Promise<Student> {
     return this.studentsService.getOneStudentAndProfile(id);
   }
 
-  @Get('/all/:pageNo/:itemsPerPage')
+  @Get('/all/:hrId/:pageNo/:itemsPerPage')
   allAvailableStudents(
-    @Param('pageNo') pageNo: number,
-    @Param('itemsPerPage') itemsPerPage: number,
+    @Param('hrId') hrId: string,
+    @Param('pageNo', ParseIntPipe)
+    pageNo: number,
+    @Param('itemsPerPage', ParseIntPipe)
+    itemsPerPage: number,
   ): Promise<PaginatedAllStudentsResponse> {
     return this.studentsService.getAllAvailableStudents(
-      Number(pageNo),
-      Number(itemsPerPage),
+      hrId,
+      pageNo,
+      itemsPerPage,
     );
   }
 
-  @Get(
-    '/filter/:pageNo/:itemsPerPage/:searchText/:courseCompletion/:courseEngagement/:projectDegree/:teamProjectDegree/:expectedTypeWorkId/:expectedContractTypeId/:expectedSalaryMin/:expectedSalaryMax/:canTakeApprenticeship/:monthsOfCommercialExp',
-  )
+  @Get('/filter/search')
   filteredStudents(
-    @Param('pageNo') pageNo: number,
-    @Param('itemsPerPage') itemsPerPage: number,
-    @Param('searchText') searchText?: string,
-    @Param('courseCompletion') courseCompletion?: number,
-    @Param('courseEngagement') courseEngagement?: number,
-    @Param('projectDegree') projectDegree?: number,
-    @Param('teamProjectDegree') teamProjectDegree?: number,
-    @Param('expectedTypeWorkId') expectedTypeWorkId?: string,
-    @Param('expectedContractTypeId') expectedContractTypeId?: string,
-    @Param('expectedSalaryMin') expectedSalaryMin?: number,
-    @Param('expectedSalaryMax') expectedSalaryMax?: number,
-    @Param('canTakeApprenticeship') canTakeApprenticeship?: Apprenticeship,
-    @Param('monthsOfCommercialExp') monthsOfCommercialExp?: number,
+    @Query()
+    {
+      pageNo,
+      itemsPerPage,
+      searchText,
+      courseCompletion,
+      courseEngagement,
+      projectDegree,
+      teamProjectDegree,
+      expectedTypeWorkId,
+      expectedContractTypeId,
+      expectedSalaryMin,
+      expectedSalaryMax,
+      canTakeApprenticeship,
+      monthsOfCommercialExp,
+    }: FilteredStudentsDto,
   ): Promise<PaginatedFilteredStudentsResponse> {
     return this.studentsService.getFilteredStudents(
       Number(pageNo),
@@ -84,7 +90,7 @@ export class StudentsController {
   @Patch('/status/:id/:status')
   updateStatus(
     @Param('id') id: string,
-    @Param('status') status: Status,
+    @Param('status', ParseIntPipe) status: Status,
   ): Promise<GetUpdateStatusResponse> {
     return this.studentsService.updateStatus(id, status);
   }

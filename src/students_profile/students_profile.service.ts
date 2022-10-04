@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateStudentsProfileDto } from './dto/create-students_profile.dto';
 import { StudentsProfile } from './students_profile.entity';
 import { User } from '../user/user.entity';
@@ -10,7 +10,7 @@ import { ExpectedTypeWork } from '../expected_type_work/expected_type_work.entit
 export class StudentsProfileService {
   async create(
     newProfile: CreateStudentsProfileDto,
-  ): Promise<{ message: string }> {
+  ): Promise<{ message: string; success: boolean }> {
     const studentProfile = new StudentsProfile();
 
     const { registerToken } = newProfile;
@@ -18,9 +18,10 @@ export class StudentsProfileService {
     const user = await User.findOne({ where: { registerToken } });
 
     if (!user) {
-      return {
-        message: 'Użytkownik z podanym tokenem nie istnieje.',
-      };
+      throw new HttpException(
+        'Użytkownik z podanym tokenem nie istnieje.',
+        404,
+      );
     }
 
     user.registerToken = null;
@@ -90,19 +91,8 @@ export class StudentsProfileService {
     await Students.update(userStudent.students.id, { status: 1 });
 
     return {
+      success: true,
       message: 'Profil utworzony.',
     };
-  }
-
-  findAll() {
-    return `This action returns all studentsProfile`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} studentsProfile`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} studentsProfile`;
   }
 }
